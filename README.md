@@ -6,7 +6,7 @@ Free static website for **B D Window Cleaning Services**, ready for GitHub Pages
 
 - `index.html` - the website page and quote questionnaire.
 - `styles.css` - mobile-friendly styling.
-- `script.js` - prepares the static quote form email.
+- `script.js` - updates the footer year.
 - `assets/window-cleaning-hero.svg` - the hero visual used at the top of the site.
 
 ## Contact details
@@ -21,7 +21,15 @@ Before sharing the site with customers, replace the remaining phone placeholder 
 
 - `ADD PHONE NUMBER`
 
-A fully automatic online form would still need a form service or backend. This version stays free and static, so the quote form opens the visitor's email app with the details ready to send.
+## Quote form
+
+The quote form sends submissions through FormSubmit to:
+
+```text
+bdwindowservices@gmail.com
+```
+
+The first time the form is submitted, FormSubmit may send a confirmation email to this address. Open that email and confirm it once. After that, quote requests should be delivered directly to the inbox when customers click **Send quote request**.
 
 ## Turn on GitHub Pages
 
@@ -38,4 +46,4 @@ The live website should appear at:
 https://bdwindowservices-cloud.github.io/bd-window-cleaning/
 ```
 
-Test the live URL on your phone before making or printing a QR code.
+Test the live URL and submit one test quote request before making or printing a QR code.
