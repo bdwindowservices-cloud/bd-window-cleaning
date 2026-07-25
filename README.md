@@ -5,11 +5,11 @@ Free static website for **B D Window Cleaning Services**, ready for GitHub Pages
 ## Files
 
 - `index.html` - the website page and quote questionnaire.
-- `styles.css` - mobile-friendly styling.
-- `script.js` - updates the footer year.
-- `assets/window-cleaning-hero.svg` - the hero visual used at the top of the site.
+- `styles.css` - mobile-friendly styling, success message styling and mobile action bar.
+- `script.js` - updates the footer year and shows the quote confirmation after redirect.
+- `assets/window-cleaning-hero.svg` - the light blue water-droplet hero background.
 
-## Contact details
+## Current contact details
 
 The website currently uses this email address:
 
@@ -17,9 +17,7 @@ The website currently uses this email address:
 bdwindowservices@gmail.com
 ```
 
-Before sharing the site with customers, replace the remaining phone placeholder if you want a phone number shown:
-
-- `ADD PHONE NUMBER`
+A phone or WhatsApp button should only be added once Ben provides the real number.
 
 ## Quote form
 
@@ -30,6 +28,21 @@ bdwindowservices@gmail.com
 ```
 
 The first time the form is submitted, FormSubmit may send a confirmation email to this address. Open that email and confirm it once. After that, quote requests should be delivered directly to the inbox when customers click **Send quote request**.
+
+After FormSubmit redirects back to the site with `?quote=sent`, the website shows a visible thank-you confirmation message.
+
+## Best next trust upgrades
+
+Add these only when they are genuine and confirmed:
+
+- Ben's phone number and WhatsApp number.
+- A friendly photo of Ben.
+- Photos of Ben's equipment or completed work.
+- Before-and-after window photos.
+- Genuine customer reviews.
+- Google review link and rating.
+- Insurance and years of experience, if true.
+- Starting prices or example price ranges, if Ben wants to publish them.
 
 ## Turn on GitHub Pages
 
