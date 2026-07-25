@@ -2,9 +2,26 @@
 
 Free static website for **B D Window Cleaning Services**, ready for GitHub Pages.
 
+## Tone
+
+Use a calm, straightforward "we" voice. The site should sound personal without trying too hard to prove it is local or authentic.
+
+Main message:
+
+```text
+Window cleaning made simple.
+```
+
+Supporting points:
+
+- Simple process to request a fixed quote.
+- No-hassle booking after the quote is accepted.
+- Pure water cleaning for glass, frames and sills.
+- Regular and one-off window cleaning around Southampton.
+
 ## Files
 
-- `index.html` - the website page and quote questionnaire.
+- `index.html` - the website page and quote form.
 - `styles.css` - mobile-friendly styling, success message styling and mobile action bar.
 - `script.js` - updates the footer year and shows the quote confirmation after redirect.
 - `assets/window-cleaning-hero.svg` - the light blue water-droplet hero background.
@@ -35,9 +52,9 @@ After FormSubmit redirects back to the site with `?quote=sent`, the website show
 
 Add these only when they are genuine and confirmed:
 
-- Ben's phone number and WhatsApp number.
+- Phone number and WhatsApp number.
 - A friendly photo of Ben.
-- Photos of Ben's equipment or completed work.
+- Photos of equipment or completed work.
 - Before-and-after window photos.
 - Genuine customer reviews.
 - Google review link and rating.
