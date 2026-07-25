@@ -6,26 +6,22 @@ Free static website for **B D Window Cleaning Services**, ready for GitHub Pages
 
 - `index.html` - the website page and quote questionnaire.
 - `styles.css` - mobile-friendly styling.
-- `script.js` - prepares the static quote form message.
+- `script.js` - prepares the static quote form email.
 - `assets/window-cleaning-hero.svg` - the hero visual used at the top of the site.
 
-## Before going live
+## Contact details
 
-Replace these placeholders:
+The website currently uses this email address:
 
-- `ADD PHONE NUMBER`
-- `ADD EMAIL ADDRESS`
-- Any service wording that does not match what you offer yet.
-
-To make the quote button open an email, edit `script.js` and replace:
-
-```js
-const emailPlaceholder = "ADD_EMAIL_ADDRESS";
+```text
+bdwindowservices@gmail.com
 ```
 
-with your real email address.
+Before sharing the site with customers, replace the remaining phone placeholder if you want a phone number shown:
 
-This is a static website, so it does not store form submissions by itself. To collect enquiries automatically later, connect a free form service or a small backend.
+- `ADD PHONE NUMBER`
+
+A fully automatic online form would still need a form service or backend. This version stays free and static, so the quote form opens the visitor's email app with the details ready to send.
 
 ## Turn on GitHub Pages
 
