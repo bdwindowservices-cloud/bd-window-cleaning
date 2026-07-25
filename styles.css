@@ -376,14 +376,16 @@ footer a { color: var(--white); font-weight: 800; text-decoration: none; }
   h2 { font-size: clamp(1.85rem, 10vw, 2.8rem); }
   .quote-form { grid-template-columns: 1fr; box-shadow: none; }
   .checkbox-option {
-    flex-direction: column-reverse;
-    justify-content: center;
-    gap: 6px;
+    display: grid;
+    justify-items: center;
+    gap: 5px;
+    padding: 10px 12px;
     text-align: center;
   }
   .checkbox-option input {
-    width: 14px;
-    height: 14px;
+    order: 2;
+    width: 12px;
+    height: 12px;
   }
   .button { width: 100%; }
   .mobile-action-bar {
