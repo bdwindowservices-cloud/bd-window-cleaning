@@ -25,12 +25,9 @@ if (form && status) {
     ];
 
     const body = encodeURIComponent(lines.join("\n"));
-    const emailPlaceholder = "ADD_EMAIL_ADDRESS";
+    const emailAddress = "bdwindowservices@gmail.com";
 
-    status.textContent = "Message prepared. Add your email address in script.js to make this button open an email automatically.";
-
-    if (emailPlaceholder.includes("@")) {
-      window.location.href = `mailto:${emailPlaceholder}?subject=Window cleaning quote request&body=${body}`;
-    }
+    status.textContent = "Message prepared. Your email app should open with the quote details ready to send.";
+    window.location.href = `mailto:${emailAddress}?subject=Window cleaning quote request&body=${body}`;
   });
 }
