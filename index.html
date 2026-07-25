@@ -71,16 +71,21 @@
         <div class="quote-intro">
           <p class="section-kicker">Quote questionnaire</p>
           <h2 id="quote-title">Send the details needed for a clear quote.</h2>
-          <p>This static form prepares an email with the quote details ready to send to B D Window Cleaning Services.</p>
+          <p>Complete the short form and the details will be sent directly to B D Window Cleaning Services.</p>
         </div>
-        <form class="quote-form" id="quote-form">
-          <label>Name<input name="name" type="text" autocomplete="name" placeholder="Your name"></label>
-          <label>Contact details<input name="contact" type="text" autocomplete="email" placeholder="Phone or email"></label>
-          <label>Postcode or area<input name="area" type="text" autocomplete="postal-code" placeholder="e.g. SO15, Bitterne, Shirley"></label>
-          <label>Property type<select name="property"><option value="">Select one</option><option>House</option><option>Flat</option><option>Bungalow</option><option>Other</option></select></label>
-          <label>Cleaning frequency<select name="frequency"><option value="">Select one</option><option>One-off clean</option><option>Every 6 weeks</option><option>Not sure yet</option></select></label>
-          <label class="wide">Access notes<textarea name="access" rows="3" placeholder="Gates, parking, rear access, conservatory, or anything useful"></textarea></label>
-          <div class="form-actions wide"><button class="button primary" type="submit">Prepare quote email</button><p id="form-status" role="status" aria-live="polite"></p></div>
+        <form class="quote-form" id="quote-form" action="https://formsubmit.co/bdwindowservices@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="New window cleaning quote request">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_next" value="https://bdwindowservices-cloud.github.io/bd-window-cleaning/?quote=sent">
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display: none;">
+          <label>Name<input name="Name" type="text" autocomplete="name" placeholder="Your name" required></label>
+          <label>Contact details<input name="Contact details" type="text" autocomplete="email" placeholder="Phone or email" required></label>
+          <label>Postcode or area<input name="Postcode or area" type="text" autocomplete="postal-code" placeholder="e.g. SO15, Bitterne, Shirley" required></label>
+          <label>Property type<select name="Property type" required><option value="">Select one</option><option>House</option><option>Flat</option><option>Bungalow</option><option>Other</option></select></label>
+          <label>Cleaning frequency<select name="Cleaning frequency" required><option value="">Select one</option><option>One-off clean</option><option>Every 6 weeks</option><option>Not sure yet</option></select></label>
+          <label class="wide">Access notes<textarea name="Access notes" rows="3" placeholder="Gates, parking, rear access, conservatory, or anything useful"></textarea></label>
+          <div class="form-actions wide"><button class="button primary" type="submit">Send quote request</button><p id="form-status" role="status" aria-live="polite"></p></div>
         </form>
       </section>
 
