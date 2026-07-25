@@ -18,10 +18,8 @@ if (form && status) {
       `Contact: ${data.get("contact") || ""}`,
       `Postcode / area: ${data.get("area") || ""}`,
       `Property type: ${data.get("property") || ""}`,
-      `Size / windows: ${data.get("size") || ""}`,
       `Frequency: ${data.get("frequency") || ""}`,
-      `Access notes: ${data.get("access") || ""}`,
-      `Preferred dates / extra notes: ${data.get("notes") || ""}`
+      `Access notes: ${data.get("access") || ""}`
     ];
 
     const body = encodeURIComponent(lines.join("\n"));
