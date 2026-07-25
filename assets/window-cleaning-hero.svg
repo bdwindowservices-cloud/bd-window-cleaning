@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Clean window with squeegee</title>
+  <desc id="desc">A calm teal illustration of a freshly cleaned window with water drops and a squeegee.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#e4f6f3"/>
+      <stop offset="1" stop-color="#74bdc4"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" x2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#dff5f3" stop-opacity="0.28"/>
+    </linearGradient>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#sky)"/>
+  <path d="M0 0h760L285 1200H0z" fill="#fff" opacity="0.26"/>
+  <path d="M920 0h880v1200h-430z" fill="#fff" opacity="0.14"/>
+  <rect x="228" y="150" width="1344" height="884" rx="30" fill="url(#glass)" stroke="#fff" stroke-opacity="0.55" stroke-width="10"/>
+  <path d="M900 150v884M228 590h1344" stroke="#fff" stroke-opacity="0.5" stroke-width="5"/>
+  <rect x="350" y="285" width="830" height="65" fill="#fff" opacity="0.72"/>
+  <rect x="405" y="420" width="1135" height="61" fill="#fff" opacity="0.72"/>
+  <g fill="#fff" opacity="0.56">
+    <circle cx="490" cy="760" r="14"/>
+    <circle cx="570" cy="830" r="10"/>
+    <circle cx="700" cy="705" r="11"/>
+    <circle cx="1000" cy="690" r="10"/>
+    <circle cx="1180" cy="455" r="10"/>
+    <circle cx="1280" cy="535" r="15"/>
+  </g>
+  <rect x="1070" y="770" width="405" height="36" rx="18" fill="#0c585c" opacity="0.48"/>
+  <circle cx="1320" cy="821" r="45" fill="#0c585c" opacity="0.66"/>
+  <rect x="1448" y="805" width="41" height="186" fill="#0c585c" opacity="0.72"/>
+  <rect y="1015" width="1800" height="185" fill="#172521" opacity="0.12"/>
+</svg>
