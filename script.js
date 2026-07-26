@@ -45,6 +45,18 @@ const setSingleCheckedOption = (selectedOption, options) => {
   });
 };
 
+const setMobileActionText = (text) => {
+  if (!mobileQuoteAmount) {
+    return;
+  }
+
+  mobileQuoteAmount.textContent = text;
+  mobileQuoteAmount.setAttribute("href", "#quote");
+  if (mobileActionBar) {
+    mobileActionBar.classList.add("is-single-action");
+  }
+};
+
 const resetMobileQuoteAmount = () => {
   if (!mobileQuoteAmount) {
     return;
@@ -58,15 +70,7 @@ const resetMobileQuoteAmount = () => {
 };
 
 const updateMobileQuoteAmount = (price) => {
-  if (!mobileQuoteAmount) {
-    return;
-  }
-
-  mobileQuoteAmount.textContent = `Quote: ${price}`;
-  mobileQuoteAmount.setAttribute("href", "#quote");
-  if (mobileActionBar) {
-    mobileActionBar.classList.add("is-single-action");
-  }
+  setMobileActionText(`Quote: ${price}`);
 };
 
 const closeQuoteDetails = () => {
@@ -75,17 +79,17 @@ const closeQuoteDetails = () => {
   }
 };
 
-const updateQuoteStep = (hasFrontSelection) => {
+const updateQuoteStep = (hasCompleteSelection) => {
   if (quoteNextButton) {
-    quoteNextButton.disabled = !hasFrontSelection;
+    quoteNextButton.disabled = !hasCompleteSelection;
   }
   if (!quoteNextHint) {
     return;
   }
 
-  quoteNextHint.textContent = hasFrontSelection
+  quoteNextHint.textContent = hasCompleteSelection
     ? "Your quote is ready. Continue to send your details."
-    : "Choose a front window option to continue.";
+    : "Choose your front and back/side options to continue.";
 };
 
 const updateQuoteTotal = () => {
@@ -111,8 +115,27 @@ const updateQuoteTotal = () => {
     return;
   }
 
+  if (!selectedBackSide) {
+    if (quoteTotal) {
+      quoteTotal.hidden = false;
+    }
+    if (quoteTotalPrice) {
+      quoteTotalPrice.textContent = "Quote in progress";
+    }
+    if (quoteTotalMonthly) {
+      quoteTotalMonthly.textContent = "Choose a back/side option to see your price.";
+    }
+    if (estimatedQuoteInput) {
+      estimatedQuoteInput.value = "";
+    }
+    setMobileActionText("Quote in progress");
+    updateQuoteStep(false);
+    closeQuoteDetails();
+    return;
+  }
+
   const frontPrice = Number(selectedFront.dataset.price || 0);
-  const backSideExtra = selectedBackSide ? Number(selectedBackSide.dataset.extra || 0) : 0;
+  const backSideExtra = Number(selectedBackSide.dataset.extra || 0);
   const totalPrice = frontPrice + backSideExtra;
   const monthlyPrice = totalPrice * 2 / 3;
   const price = formatMoney(totalPrice);
