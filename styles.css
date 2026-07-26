@@ -73,7 +73,7 @@ nav a:hover, nav a:focus-visible { color: var(--accent-dark); }
 .hero {
   position: relative;
   display: grid;
-  min-height: min(760px, calc(100svh - 72px));
+  min-height: min(660px, calc(88svh - 72px));
   overflow: hidden;
   background: linear-gradient(90deg, rgba(231, 248, 252, 0.96), rgba(231, 248, 252, 0.82), rgba(231, 248, 252, 0.48)), url("assets/window-cleaning-hero.svg") center / cover no-repeat;
 }
@@ -88,7 +88,7 @@ nav a:hover, nav a:focus-visible { color: var(--accent-dark); }
   position: relative;
   z-index: 1;
   width: min(800px, 100%);
-  padding: clamp(70px, 10vw, 124px) clamp(20px, 6vw, 72px);
+  padding: clamp(56px, 8vw, 100px) clamp(20px, 6vw, 72px);
   color: var(--ink);
   animation: riseIn 700ms ease both;
 }
@@ -477,7 +477,7 @@ footer a { color: var(--white); font-weight: 800; text-decoration: none; }
 }
 @media (max-width: 900px) {
   .site-header { align-items: flex-start; flex-direction: column; }
-  .hero { min-height: 640px; }
+  .hero { min-height: 560px; }
   .strip, .two-column, .quote-section, .area, .contact { grid-template-columns: 1fr; }
   .services-overview { grid-template-columns: 1fr; }
   .clean-window-placeholder { max-width: 520px; }
@@ -491,8 +491,8 @@ footer a { color: var(--white); font-weight: 800; text-decoration: none; }
   .site-header { position: sticky; min-height: 64px; }
   .brand { align-items: flex-start; }
   nav { justify-content: flex-start; width: 100%; }
-  .hero { min-height: 560px; }
-  .hero-copy { padding-top: 54px; padding-bottom: 84px; }
+  .hero { min-height: 480px; }
+  .hero-copy { padding-top: 46px; padding-bottom: 58px; }
   h1 { font-size: clamp(2.35rem, 14vw, 4rem); max-width: 12ch; }
   h2 { font-size: clamp(1.85rem, 10vw, 2.8rem); }
   .clean-window-visual { min-height: 220px; }
