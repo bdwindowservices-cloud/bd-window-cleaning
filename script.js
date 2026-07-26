@@ -4,6 +4,7 @@ const params = new URLSearchParams(window.location.search);
 const frontWindowOptions = document.querySelectorAll("[data-front-window-option]");
 const backSideWindowOptions = document.querySelector("#back-side-window-options");
 const backSideInputs = document.querySelectorAll("[data-back-side-window-option]");
+const extraOptions = document.querySelector("#extra-options");
 const extraInputs = document.querySelectorAll("[data-extra-option]");
 const quoteTotal = document.querySelector("#quote-total");
 const quoteTotalPrice = document.querySelector("#quote-total-price");
@@ -43,6 +44,12 @@ const setSingleCheckedOption = (selectedOption, options) => {
     if (option !== selectedOption) {
       option.checked = false;
     }
+  });
+};
+
+const clearOptions = (options) => {
+  options.forEach((option) => {
+    option.checked = false;
   });
 };
 
@@ -112,7 +119,19 @@ const updateQuoteTotal = () => {
   const selectedBackSide = getCheckedOption(backSideInputs);
   const selectedExtra = getCheckedOption(extraInputs);
 
+  if (extraOptions) {
+    extraOptions.hidden = !selectedBackSide;
+  }
+
   if (!selectedFront) {
+    if (backSideWindowOptions) {
+      backSideWindowOptions.hidden = true;
+    }
+    if (extraOptions) {
+      extraOptions.hidden = true;
+    }
+    clearOptions(backSideInputs);
+    clearOptions(extraInputs);
     setQuoteProgressState(false);
     if (quoteTotal) {
       quoteTotal.hidden = false;
@@ -133,6 +152,10 @@ const updateQuoteTotal = () => {
   }
 
   if (!selectedBackSide) {
+    if (extraOptions) {
+      extraOptions.hidden = true;
+    }
+    clearOptions(extraInputs);
     setQuoteProgressState(true);
     if (quoteTotal) {
       quoteTotal.hidden = false;
@@ -187,9 +210,11 @@ frontWindowOptions.forEach((option) => {
       backSideWindowOptions.hidden = !hasFrontSelection;
     }
     if (!hasFrontSelection) {
-      backSideInputs.forEach((backSideInput) => {
-        backSideInput.checked = false;
-      });
+      clearOptions(backSideInputs);
+      clearOptions(extraInputs);
+      if (extraOptions) {
+        extraOptions.hidden = true;
+      }
     }
 
     updateQuoteTotal();
@@ -199,6 +224,13 @@ frontWindowOptions.forEach((option) => {
 backSideInputs.forEach((option) => {
   option.addEventListener("change", () => {
     setSingleCheckedOption(option, backSideInputs);
+    const hasBackSideSelection = Boolean(getCheckedOption(backSideInputs));
+    if (extraOptions) {
+      extraOptions.hidden = !hasBackSideSelection;
+    }
+    if (!hasBackSideSelection) {
+      clearOptions(extraInputs);
+    }
     updateQuoteTotal();
   });
 });
