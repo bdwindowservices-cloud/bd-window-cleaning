@@ -8,7 +8,9 @@ const quoteTotal = document.querySelector("#quote-total");
 const quoteTotalPrice = document.querySelector("#quote-total-price");
 const quoteTotalMonthly = document.querySelector("#quote-total-monthly");
 const estimatedQuoteInput = document.querySelector("#estimated-quote");
+const mobileActionBar = document.querySelector(".mobile-action-bar");
 const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
+const mobileSeePricesLink = document.querySelector("#mobile-see-prices-link");
 const quoteNextButton = document.querySelector("#quote-next-button");
 const quoteNextHint = document.querySelector("#quote-next-hint");
 const quoteDetails = document.querySelector("#quote-details");
@@ -51,6 +53,12 @@ const resetMobileQuoteAmount = () => {
 
   mobileQuoteAmount.textContent = mobileQuoteDefaultText;
   mobileQuoteAmount.setAttribute("href", mobileQuoteDefaultHref);
+  if (mobileActionBar) {
+    mobileActionBar.classList.add("is-single-action");
+  }
+  if (mobileSeePricesLink) {
+    mobileSeePricesLink.hidden = true;
+  }
 };
 
 const updateMobileQuoteAmount = (price) => {
@@ -60,6 +68,12 @@ const updateMobileQuoteAmount = (price) => {
 
   mobileQuoteAmount.textContent = `Quote: ${price}`;
   mobileQuoteAmount.setAttribute("href", "#quote");
+  if (mobileActionBar) {
+    mobileActionBar.classList.remove("is-single-action");
+  }
+  if (mobileSeePricesLink) {
+    mobileSeePricesLink.hidden = false;
+  }
 };
 
 const closeQuoteDetails = () => {
