@@ -204,7 +204,7 @@ h3 { margin-bottom: 8px; font-size: 1.2rem; line-height: 1.2; }
 .services-overview {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
-  gap: clamp(24px, 6vw, 76px);
+  gap: clamp(20px, 4vw, 48px);
   align-items: center;
 }
 .services-overview .section-heading { margin-bottom: 0; }
