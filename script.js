@@ -75,8 +75,16 @@ const resetMobileQuoteAmount = () => {
   }
 };
 
-const updateMobileQuoteAmount = (price) => {
-  setMobileActionText(`Quote: ${price}`);
+const updateMobileQuoteAmount = (price, monthly) => {
+  if (!mobileQuoteAmount) {
+    return;
+  }
+
+  mobileQuoteAmount.innerHTML = `<span>Quote: ${price}</span><small>${monthly} per month</small>`;
+  mobileQuoteAmount.setAttribute("href", "#quote");
+  if (mobileActionBar) {
+    mobileActionBar.classList.add("is-single-action");
+  }
 };
 
 const closeQuoteDetails = () => {
@@ -164,7 +172,7 @@ const updateQuoteTotal = () => {
     estimatedQuoteInput.value = estimateText;
   }
   updateQuoteStep(true);
-  updateMobileQuoteAmount(price);
+  updateMobileQuoteAmount(price, monthly);
 };
 
 frontWindowOptions.forEach((option) => {
