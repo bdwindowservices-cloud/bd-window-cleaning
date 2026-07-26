@@ -8,6 +8,9 @@ const quoteTotal = document.querySelector("#quote-total");
 const quoteTotalPrice = document.querySelector("#quote-total-price");
 const quoteTotalMonthly = document.querySelector("#quote-total-monthly");
 const estimatedQuoteInput = document.querySelector("#estimated-quote");
+const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
+const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
+const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
 
 if (year) {
   year.textContent = new Date().getFullYear();
@@ -38,24 +41,45 @@ const setSingleCheckedOption = (selectedOption, options) => {
   });
 };
 
+const resetMobileQuoteAmount = () => {
+  if (!mobileQuoteAmount) {
+    return;
+  }
+
+  mobileQuoteAmount.textContent = mobileQuoteDefaultText;
+  mobileQuoteAmount.setAttribute("href", mobileQuoteDefaultHref);
+};
+
+const updateMobileQuoteAmount = (price) => {
+  if (!mobileQuoteAmount) {
+    return;
+  }
+
+  mobileQuoteAmount.textContent = `Quote: ${price}`;
+  mobileQuoteAmount.setAttribute("href", "#quote");
+};
+
 const updateQuoteTotal = () => {
   const selectedFront = getCheckedOption(frontWindowOptions);
   const selectedBackSide = getCheckedOption(backSideInputs);
-  const selectedPricedBackSide = selectedBackSide && selectedBackSide.dataset.price ? selectedBackSide : null;
-  const priceSource = selectedPricedBackSide || selectedFront;
 
-  if (!selectedFront || !priceSource) {
+  if (!selectedFront) {
     if (quoteTotal) {
       quoteTotal.hidden = true;
     }
     if (estimatedQuoteInput) {
       estimatedQuoteInput.value = "";
     }
+    resetMobileQuoteAmount();
     return;
   }
 
-  const price = formatMoney(priceSource.dataset.price);
-  const monthly = formatMoney(priceSource.dataset.monthly);
+  const frontPrice = Number(selectedFront.dataset.price || 0);
+  const backSideExtra = selectedBackSide ? Number(selectedBackSide.dataset.extra || 0) : 0;
+  const totalPrice = frontPrice + backSideExtra;
+  const monthlyPrice = totalPrice * 2 / 3;
+  const price = formatMoney(totalPrice);
+  const monthly = formatMoney(monthlyPrice);
   const estimateText = `${price} (${monthly} per month)`;
 
   if (quoteTotal) {
@@ -70,6 +94,7 @@ const updateQuoteTotal = () => {
   if (estimatedQuoteInput) {
     estimatedQuoteInput.value = estimateText;
   }
+  updateMobileQuoteAmount(price);
 };
 
 frontWindowOptions.forEach((option) => {
