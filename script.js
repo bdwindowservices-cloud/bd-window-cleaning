@@ -45,6 +45,12 @@ const setSingleCheckedOption = (selectedOption, options) => {
   });
 };
 
+const setQuoteProgressState = (isInProgress) => {
+  if (quoteTotal) {
+    quoteTotal.classList.toggle("is-in-progress", isInProgress);
+  }
+};
+
 const setMobileActionText = (text) => {
   if (!mobileQuoteAmount) {
     return;
@@ -97,6 +103,7 @@ const updateQuoteTotal = () => {
   const selectedBackSide = getCheckedOption(backSideInputs);
 
   if (!selectedFront) {
+    setQuoteProgressState(false);
     if (quoteTotal) {
       quoteTotal.hidden = false;
     }
@@ -116,6 +123,7 @@ const updateQuoteTotal = () => {
   }
 
   if (!selectedBackSide) {
+    setQuoteProgressState(true);
     if (quoteTotal) {
       quoteTotal.hidden = false;
     }
@@ -134,6 +142,7 @@ const updateQuoteTotal = () => {
     return;
   }
 
+  setQuoteProgressState(false);
   const frontPrice = Number(selectedFront.dataset.price || 0);
   const backSideExtra = Number(selectedBackSide.dataset.extra || 0);
   const totalPrice = frontPrice + backSideExtra;
