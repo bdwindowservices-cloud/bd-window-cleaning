@@ -92,20 +92,26 @@
           <input type="hidden" name="_template" value="table">
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_next" value="https://bdwindowservices-cloud.github.io/bd-window-cleaning/?quote=sent#quote-status">
+          <input type="hidden" name="Estimated quote" id="estimated-quote" value="">
           <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display: none;">
           <fieldset class="fixed-price-choice wide">
             <legend>Fixed price</legend>
             <p>Roughly how many windows do you have?<br>Count each grouped window as one. It doesn’t need to be exact.</p>
+            <div class="quote-total" id="quote-total" hidden aria-live="polite">
+              <span>Estimated price</span>
+              <strong id="quote-total-price">£0</strong>
+              <small id="quote-total-monthly">Choose a front window option to see your quote.</small>
+            </div>
             <p><strong>How many sets of windows are at the front of your house?</strong></p>
-            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 1 - 2 sets of windows £12 (£8 per month)" data-front-window-option>Front 1 - 2 sets of windows £12 (£8 per month)</label>
-            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 3 - 4 sets of windows £15 (£10 per month)" data-front-window-option>Front 3 - 4 sets of windows £15 (£10 per month)</label>
-            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 5 - 6 sets of windows £18 (£12 per month)" data-front-window-option>Front 5 - 6 sets of windows £18 (£12 per month)</label>
+            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 1 - 2 sets of windows" data-front-window-option data-price="12" data-monthly="8">Front 1 - 2 sets of windows</label>
+            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 3 - 4 sets of windows" data-front-window-option data-price="15" data-monthly="10">Front 3 - 4 sets of windows</label>
+            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 5 - 6 sets of windows" data-front-window-option data-price="18" data-monthly="12">Front 5 - 6 sets of windows</label>
             <div id="back-side-window-options" class="conditional-options" hidden>
               <p><strong>How many sets of windows are at the back/side of your house?</strong></p>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="No need to clean, only clean fronts">No need to clean, only clean fronts</label>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="1 - 2 sets of windows £20 (£13.30 per month)">1 - 2 sets of windows £20 (£13.30 per month)</label>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="3 - 4 sets of windows £24 (£16 per month)">3 - 4 sets of windows £24 (£16 per month)</label>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="5 - 6 sets of windows £28 (£18.60 per month)">5 - 6 sets of windows £28 (£18.60 per month)</label>
+              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="No need to clean, only clean fronts" data-back-side-window-option>No need to clean, only clean fronts</label>
+              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="1 - 2 sets of windows" data-back-side-window-option data-price="20" data-monthly="13.30">1 - 2 sets of windows</label>
+              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="3 - 4 sets of windows" data-back-side-window-option data-price="24" data-monthly="16">3 - 4 sets of windows</label>
+              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="5 - 6 sets of windows" data-back-side-window-option data-price="28" data-monthly="18.60">5 - 6 sets of windows</label>
             </div>
           </fieldset>
           <label>Name<input name="Name" type="text" autocomplete="name" placeholder="Your name" required></label>
