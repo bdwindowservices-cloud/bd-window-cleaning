@@ -87,7 +87,13 @@ const updateQuoteTotal = () => {
 
   if (!selectedFront) {
     if (quoteTotal) {
-      quoteTotal.hidden = true;
+      quoteTotal.hidden = false;
+    }
+    if (quoteTotalPrice) {
+      quoteTotalPrice.textContent = "£-";
+    }
+    if (quoteTotalMonthly) {
+      quoteTotalMonthly.textContent = "Choose a front window option to see your quote.";
     }
     if (estimatedQuoteInput) {
       estimatedQuoteInput.value = "";
@@ -156,3 +162,5 @@ if (quoteNextButton && quoteDetails) {
     quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 }
+
+updateQuoteTotal();
