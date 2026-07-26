@@ -80,7 +80,7 @@ const updateMobileQuoteAmount = (price, monthly) => {
     return;
   }
 
-  mobileQuoteAmount.innerHTML = `<span>Quote: ${price}</span><small>${monthly} per month</small>`;
+  mobileQuoteAmount.innerHTML = `<span>${price} per clean</span><small>${monthly} per month</small>`;
   mobileQuoteAmount.setAttribute("href", "#quote");
   if (mobileActionBar) {
     mobileActionBar.classList.add("is-single-action");
