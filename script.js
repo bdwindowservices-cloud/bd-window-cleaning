@@ -4,6 +4,7 @@ const params = new URLSearchParams(window.location.search);
 const frontWindowOptions = document.querySelectorAll("[data-front-window-option]");
 const backSideWindowOptions = document.querySelector("#back-side-window-options");
 const backSideInputs = document.querySelectorAll("[data-back-side-window-option]");
+const extraInputs = document.querySelectorAll("[data-extra-option]");
 const quoteTotal = document.querySelector("#quote-total");
 const quoteTotalPrice = document.querySelector("#quote-total-price");
 const quoteTotalMonthly = document.querySelector("#quote-total-monthly");
@@ -109,6 +110,7 @@ const updateQuoteStep = (hasCompleteSelection) => {
 const updateQuoteTotal = () => {
   const selectedFront = getCheckedOption(frontWindowOptions);
   const selectedBackSide = getCheckedOption(backSideInputs);
+  const selectedExtra = getCheckedOption(extraInputs);
 
   if (!selectedFront) {
     setQuoteProgressState(false);
@@ -153,7 +155,8 @@ const updateQuoteTotal = () => {
   setQuoteProgressState(false);
   const frontPrice = Number(selectedFront.dataset.price || 0);
   const backSideExtra = Number(selectedBackSide.dataset.extra || 0);
-  const totalPrice = frontPrice + backSideExtra;
+  const extraPrice = selectedExtra ? Number(selectedExtra.dataset.extra || 0) : 0;
+  const totalPrice = frontPrice + backSideExtra + extraPrice;
   const monthlyPrice = totalPrice * 2 / 3;
   const price = formatMoney(totalPrice);
   const monthly = formatMoney(monthlyPrice);
@@ -196,6 +199,13 @@ frontWindowOptions.forEach((option) => {
 backSideInputs.forEach((option) => {
   option.addEventListener("change", () => {
     setSingleCheckedOption(option, backSideInputs);
+    updateQuoteTotal();
+  });
+});
+
+extraInputs.forEach((option) => {
+  option.addEventListener("change", () => {
+    setSingleCheckedOption(option, extraInputs);
     updateQuoteTotal();
   });
 });
