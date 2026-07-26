@@ -505,7 +505,7 @@ footer a { color: var(--white); font-weight: 800; text-decoration: none; }
   .service-list article:last-child { border-bottom: 0; }
 }
 @media (max-width: 640px) {
-  body { padding-bottom: 70px; }
+  body { padding-bottom: 78px; }
   .site-header { position: sticky; min-height: 58px; }
   .brand { align-items: center; gap: 9px; }
   .brand-logo { width: 82px; height: 42px; }
@@ -551,12 +551,19 @@ footer a { color: var(--white); font-weight: 800; text-decoration: none; }
   .mobile-action-bar a {
     display: grid;
     place-items: center;
-    min-height: 44px;
+    min-height: 52px;
     border-radius: 8px;
     color: var(--white);
     background: var(--accent-dark);
     font-weight: 850;
+    line-height: 1.15;
     text-decoration: none;
+  }
+  .mobile-action-bar a small {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 800;
+    opacity: 0.9;
   }
   .mobile-action-bar a:first-child { color: var(--accent-dark); background: var(--mist); }
   .mobile-action-bar.is-single-action a:first-child { color: var(--white); background: var(--accent-dark); }
