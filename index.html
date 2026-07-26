@@ -7,12 +7,23 @@
     <meta name="description" content="Simple, reliable window cleaning in Southampton. Request a fixed quote for regular or one-off pure water window cleaning.">
     <link rel="preload" href="assets/window-cleaning-hero.svg" as="image">
     <link rel="stylesheet" href="styles.css">
+    <style>
+      .site-header { min-height: 58px; padding-top: 3px; padding-bottom: 3px; }
+      .brand { gap: 20px; }
+      .brand-logo { width: 104px; height: 42px; object-fit: cover; object-position: top center; }
+      .brand-name { max-width: 320px; }
+      @media (max-width: 640px) {
+        .site-header { min-height: 54px; }
+        .brand { gap: 14px; }
+        .brand-logo { width: 82px; height: 34px; }
+      }
+    </style>
   </head>
   <body>
     <header class="site-header" aria-label="Main navigation">
       <a class="brand" href="#top" aria-label="B D Window Cleaning Services home">
         <img class="brand-logo" src="assets/bd-header-logo.svg" alt="" width="144" height="97" aria-hidden="true">
-        <span class="brand-name">B D Window Cleaning</span>
+        <span class="brand-name">B D Window Cleaning Services</span>
       </a>
       <nav>
         <a href="#services">Services</a>
