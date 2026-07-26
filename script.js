@@ -9,6 +9,9 @@ const quoteTotalPrice = document.querySelector("#quote-total-price");
 const quoteTotalMonthly = document.querySelector("#quote-total-monthly");
 const estimatedQuoteInput = document.querySelector("#estimated-quote");
 const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
+const quoteNextButton = document.querySelector("#quote-next-button");
+const quoteNextHint = document.querySelector("#quote-next-hint");
+const quoteDetails = document.querySelector("#quote-details");
 const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
 const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
 
@@ -59,6 +62,25 @@ const updateMobileQuoteAmount = (price) => {
   mobileQuoteAmount.setAttribute("href", "#quote");
 };
 
+const closeQuoteDetails = () => {
+  if (quoteDetails) {
+    quoteDetails.hidden = true;
+  }
+};
+
+const updateQuoteStep = (hasFrontSelection) => {
+  if (quoteNextButton) {
+    quoteNextButton.disabled = !hasFrontSelection;
+  }
+  if (!quoteNextHint) {
+    return;
+  }
+
+  quoteNextHint.textContent = hasFrontSelection
+    ? "Your quote is ready. Continue to send your details."
+    : "Choose a front window option to continue.";
+};
+
 const updateQuoteTotal = () => {
   const selectedFront = getCheckedOption(frontWindowOptions);
   const selectedBackSide = getCheckedOption(backSideInputs);
@@ -71,6 +93,8 @@ const updateQuoteTotal = () => {
       estimatedQuoteInput.value = "";
     }
     resetMobileQuoteAmount();
+    updateQuoteStep(false);
+    closeQuoteDetails();
     return;
   }
 
@@ -94,6 +118,7 @@ const updateQuoteTotal = () => {
   if (estimatedQuoteInput) {
     estimatedQuoteInput.value = estimateText;
   }
+  updateQuoteStep(true);
   updateMobileQuoteAmount(price);
 };
 
@@ -121,3 +146,13 @@ backSideInputs.forEach((option) => {
     updateQuoteTotal();
   });
 });
+
+if (quoteNextButton && quoteDetails) {
+  quoteNextButton.addEventListener("click", () => {
+    quoteDetails.hidden = false;
+    if (quoteNextHint) {
+      quoteNextHint.textContent = "Step 2: send your details so we can arrange the quote.";
+    }
+    quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
