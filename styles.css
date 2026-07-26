@@ -403,6 +403,9 @@ h3 { margin-bottom: 8px; font-size: 1.2rem; line-height: 1.2; }
   font-size: clamp(2.1rem, 7vw, 3rem);
   line-height: 1;
 }
+.quote-total.is-in-progress strong {
+  font-size: clamp(1.55rem, 4vw, 2.05rem);
+}
 .quote-total small {
   color: var(--muted);
   font-size: 0.98rem;
