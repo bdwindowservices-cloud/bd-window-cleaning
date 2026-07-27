@@ -177,7 +177,7 @@ const updateQuoteStep = (hasCompleteSelection) => {
   }
 
   quoteNextHint.textContent = hasCompleteSelection
-    ? "Your quote is ready. Continue to send your details."
+    ? "Your estimate is ready. Continue to send your details."
     : "Choose your front and back/side options to continue.";
 };
 
