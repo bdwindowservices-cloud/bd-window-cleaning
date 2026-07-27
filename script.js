@@ -1,4 +1,5 @@
 const year = document.querySelector("#year");
+const quoteForm = document.querySelector("#quote-form");
 const quoteStatus = document.querySelector("#quote-status");
 const params = new URLSearchParams(window.location.search);
 const frontWindowOptions = document.querySelectorAll("[data-front-window-option]");
@@ -19,6 +20,7 @@ const bookingNextButton = document.querySelector("#booking-next-button");
 const bookingNextHint = document.querySelector("#booking-next-hint");
 const bookingDateStep = document.querySelector("#booking-date-step");
 const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
+const formStatus = document.querySelector("#form-status");
 const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
 const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
 const dateLabels = ["First", "Second", "Third", "Fourth"];
@@ -112,6 +114,9 @@ const closeBookingDateStep = () => {
     bookingDateStep.hidden = true;
   }
   clearOptions(bookingDateOptions);
+  if (formStatus) {
+    formStatus.textContent = "";
+  }
 };
 
 const setQuoteProgressState = (isInProgress) => {
@@ -307,6 +312,9 @@ extraInputs.forEach((option) => {
 bookingDateOptions.forEach((option) => {
   option.addEventListener("change", () => {
     setSingleCheckedOption(option, bookingDateOptions);
+    if (formStatus) {
+      formStatus.textContent = "";
+    }
   });
 });
 
@@ -329,6 +337,21 @@ if (bookingNextButton && bookingDateStep) {
       bookingNextHint.textContent = "Step 3: choose a cleaning date before sending your request.";
     }
     bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+if (quoteForm) {
+  quoteForm.addEventListener("submit", (event) => {
+    if (bookingDateOptions.length && !getCheckedOption(bookingDateOptions)) {
+      event.preventDefault();
+      if (formStatus) {
+        formStatus.textContent = "Please choose a cleaning date option before sending your request.";
+      }
+      if (bookingDateStep) {
+        bookingDateStep.hidden = false;
+        bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
   });
 }
 
