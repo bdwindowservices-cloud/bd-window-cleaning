@@ -335,7 +335,7 @@ if (quoteNextButton && quoteDetails) {
     quoteDetails.hidden = false;
     closeBookingDateStep();
     if (quoteNextHint) {
-      quoteNextHint.textContent = "Step 2: send your details so we can arrange your clean.";
+      quoteNextHint.textContent = "Step 2: send your details to book a clean right now.";
     }
     quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
   });
