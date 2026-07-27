@@ -323,7 +323,7 @@ if (quoteNextButton && quoteDetails) {
     quoteDetails.hidden = false;
     closeBookingDateStep();
     if (quoteNextHint) {
-      quoteNextHint.textContent = "Step 2: send your details so we can arrange the quote.";
+      quoteNextHint.textContent = "Step 2: send your details so we can arrange your clean.";
     }
     quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
   });
