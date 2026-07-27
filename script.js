@@ -25,6 +25,7 @@ const bookingNextButton = document.querySelector("#booking-next-button");
 const bookingNextHint = document.querySelector("#booking-next-hint");
 const bookingDateStep = document.querySelector("#booking-date-step");
 const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
+const bookCleanButton = document.querySelector("#book-clean-button");
 const formStatus = document.querySelector("#form-status");
 const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
 const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
@@ -431,6 +432,11 @@ if (bookingNextButton && bookingDateStep) {
 
 if (quoteForm) {
   quoteForm.addEventListener("submit", (event) => {
+    if (!validateQuoteDetails()) {
+      event.preventDefault();
+      return;
+    }
+
     if (bookingDateOptions.length && !getCheckedOption(bookingDateOptions)) {
       event.preventDefault();
       if (formStatus) {
@@ -440,6 +446,15 @@ if (quoteForm) {
         bookingDateStep.hidden = false;
         bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+      return;
+    }
+
+    if (bookCleanButton) {
+      bookCleanButton.disabled = true;
+      bookCleanButton.textContent = "Sending clean request...";
+    }
+    if (formStatus) {
+      formStatus.textContent = "Sending your clean request. The next step will confirm it has gone through.";
     }
   });
 }
