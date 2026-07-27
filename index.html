@@ -122,8 +122,23 @@
             <label>Postcode<input name="Postcode" type="text" autocomplete="postal-code" placeholder="e.g. SO15 3AB" required></label>
             <label class="wide">Access notes <span class="optional">optional</span><textarea name="Access notes" rows="3" placeholder="Gates, parking, rear access, pets, awkward windows, or anything useful"></textarea></label>
             <p class="privacy wide">Your details are only used to respond to your quote request.</p>
-            <div class="form-actions wide"><button class="button primary" type="submit">Send quote request</button><p id="form-status" role="status" aria-live="polite"></p></div>
+            <div class="form-actions wide"><button class="button primary" id="booking-next-button" type="button">Choose cleaning date</button><p id="booking-next-hint">Step 3: choose a cleaning date.</p></div>
           </div>
+          <fieldset class="booking-date-choice wide" id="booking-date-step" hidden>
+            <legend>Choose a cleaning date</legend>
+            <p>Choose the option that works best for you.</p>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" value="Happy for a clean anytime no access required" data-booking-option>Happy for a clean anytime no access required.</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="0" data-booking-slot="1 to 3 pm">First available date - 1 to 3 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="0" data-booking-slot="3 to 5 pm">First available date - 3 to 5 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="1" data-booking-slot="1 to 3 pm">Second available date - 1 to 3 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="1" data-booking-slot="3 to 5 pm">Second available date - 3 to 5 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="2" data-booking-slot="1 to 3 pm">Third available date - 1 to 3 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="2" data-booking-slot="3 to 5 pm">Third available date - 3 to 5 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="3" data-booking-slot="1 to 3 pm">Fourth available date - 1 to 3 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" data-booking-option data-booking-date-index="3" data-booking-slot="3 to 5 pm">Fourth available date - 3 to 5 pm</label>
+            <label class="checkbox-option"><input type="checkbox" name="Cleaning date preference" value="Please contact me to arrange a date" data-booking-option>Please contact me to arrange a date.</label>
+            <div class="form-actions wide"><button class="button primary" type="submit">Send quote request</button><p id="form-status" role="status" aria-live="polite"></p></div>
+          </fieldset>
         </form>
       </section>
 
@@ -175,6 +190,6 @@
       <p>&copy; <span id="year">2026</span> B D Window Cleaning Services. Window cleaning made simple in the Southampton area.</p>
       <a href="#top">Back to top</a>
     </footer>
-    <script src="script.js?v=20260726-3"></script>
+    <script src="script.js?v=20260727-1"></script>
   </body>
 </html>
