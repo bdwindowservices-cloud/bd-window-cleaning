@@ -50,6 +50,7 @@
           font-size: 0.84rem;
           line-height: 1.25;
         }
+        .desktop-action-copy small:empty { display: none; }
         .desktop-action-cta {
           display: inline-flex;
           align-items: center;
@@ -239,8 +240,8 @@
     <div class="desktop-action-bar is-idle" aria-label="Estimate status">
       <a id="desktop-estimate-action" href="#quote">
         <span class="desktop-action-copy">
-          <strong id="desktop-estimate-main">See prices</strong>
-          <small id="desktop-estimate-sub">Quick estimate first</small>
+          <strong id="desktop-estimate-main">See what your clean could cost</strong>
+          <small id="desktop-estimate-sub"></small>
         </span>
         <span class="desktop-action-cta" id="desktop-estimate-cta">See prices</span>
       </a>
