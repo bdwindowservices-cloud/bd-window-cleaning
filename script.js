@@ -228,6 +228,23 @@ const updateDesktopEstimateAmount = (price, monthly) => {
   );
 };
 
+const openBookingDateStep = () => {
+  if (!validateQuoteDetails()) {
+    return;
+  }
+
+  updateBookingDateOptions();
+  if (bookingDateStep) {
+    bookingDateStep.hidden = false;
+  }
+  if (bookingNextHint) {
+    bookingNextHint.textContent = "Step 3: choose a cleaning date before sending your request.";
+  }
+  if (bookingDateStep) {
+    bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
+
 const closeQuoteDetails = () => {
   if (quoteDetails) {
     quoteDetails.hidden = true;
@@ -266,6 +283,12 @@ const handleFloatingEstimateAction = (event) => {
   }
 
   event.preventDefault();
+
+  if (quoteDetails && !quoteDetails.hidden) {
+    openBookingDateStep();
+    return;
+  }
+
   openQuoteDetails();
 };
 
@@ -440,18 +463,7 @@ if (quoteNextButton && quoteDetails) {
 }
 
 if (bookingNextButton && bookingDateStep) {
-  bookingNextButton.addEventListener("click", () => {
-    if (!validateQuoteDetails()) {
-      return;
-    }
-
-    updateBookingDateOptions();
-    bookingDateStep.hidden = false;
-    if (bookingNextHint) {
-      bookingNextHint.textContent = "Step 3: choose a cleaning date before sending your request.";
-    }
-    bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
+  bookingNextButton.addEventListener("click", openBookingDateStep);
 }
 
 if (quoteForm) {
