@@ -503,7 +503,7 @@ footer a { color: var(--white); font-weight: 800; text-decoration: none; }
 @media (min-width: 901px) {
   .quote-form {
     justify-self: start;
-    width: calc(100% - clamp(64px, 12vw, 192px));
+    width: calc(100% - clamp(80px, 15vw, 240px));
   }
 }
 @media (max-width: 900px) {
