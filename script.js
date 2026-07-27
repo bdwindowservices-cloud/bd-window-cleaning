@@ -13,6 +13,10 @@ const quoteTotalMonthly = document.querySelector("#quote-total-monthly");
 const estimatedQuoteInput = document.querySelector("#estimated-quote");
 const mobileActionBar = document.querySelector(".mobile-action-bar");
 const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
+const desktopActionBar = document.querySelector(".desktop-action-bar");
+const desktopEstimateMain = document.querySelector("#desktop-estimate-main");
+const desktopEstimateSub = document.querySelector("#desktop-estimate-sub");
+const desktopEstimateCta = document.querySelector("#desktop-estimate-cta");
 const quoteNextButton = document.querySelector("#quote-next-button");
 const quoteNextHint = document.querySelector("#quote-next-hint");
 const quoteDetails = document.querySelector("#quote-details");
@@ -24,6 +28,9 @@ const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
 const formStatus = document.querySelector("#form-status");
 const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
 const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
+const desktopEstimateDefaultMain = desktopEstimateMain ? desktopEstimateMain.textContent : "";
+const desktopEstimateDefaultSub = desktopEstimateSub ? desktopEstimateSub.textContent : "";
+const desktopEstimateDefaultCta = desktopEstimateCta ? desktopEstimateCta.textContent : "";
 const formatCleaningDate = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
   day: "numeric",
@@ -176,6 +183,49 @@ const updateMobileQuoteAmount = (price, monthly) => {
   }
 };
 
+const setDesktopEstimateState = (main, sub, cta, state) => {
+  if (desktopEstimateMain) {
+    desktopEstimateMain.textContent = main;
+  }
+  if (desktopEstimateSub) {
+    desktopEstimateSub.textContent = sub;
+  }
+  if (desktopEstimateCta) {
+    desktopEstimateCta.textContent = cta;
+  }
+  if (desktopActionBar) {
+    desktopActionBar.classList.toggle("is-progress", state === "progress");
+    desktopActionBar.classList.toggle("is-ready", state === "ready");
+  }
+};
+
+const resetDesktopEstimateAmount = () => {
+  setDesktopEstimateState(
+    desktopEstimateDefaultMain,
+    desktopEstimateDefaultSub,
+    desktopEstimateDefaultCta,
+    "idle"
+  );
+};
+
+const setDesktopEstimateProgress = () => {
+  setDesktopEstimateState(
+    "Estimate in progress",
+    "Choose a back/side option to see your price.",
+    "Continue",
+    "progress"
+  );
+};
+
+const updateDesktopEstimateAmount = (price, monthly) => {
+  setDesktopEstimateState(
+    `${price} per clean`,
+    `${monthly} per month`,
+    "Book clean",
+    "ready"
+  );
+};
+
 const closeQuoteDetails = () => {
   if (quoteDetails) {
     quoteDetails.hidden = true;
@@ -233,6 +283,7 @@ const updateQuoteTotal = () => {
       estimatedQuoteInput.value = "";
     }
     resetMobileQuoteAmount();
+    resetDesktopEstimateAmount();
     updateQuoteStep(false);
     closeQuoteDetails();
     return;
@@ -248,7 +299,7 @@ const updateQuoteTotal = () => {
       quoteTotal.hidden = false;
     }
     if (quoteTotalPrice) {
-      quoteTotalPrice.textContent = "Quote in progress";
+      quoteTotalPrice.textContent = "Estimate in progress";
     }
     if (quoteTotalMonthly) {
       quoteTotalMonthly.textContent = "Choose a back/side option to see your price.";
@@ -256,7 +307,8 @@ const updateQuoteTotal = () => {
     if (estimatedQuoteInput) {
       estimatedQuoteInput.value = "";
     }
-    setMobileActionText("Quote in progress");
+    setMobileActionText("Estimate in progress");
+    setDesktopEstimateProgress();
     updateQuoteStep(false);
     closeQuoteDetails();
     return;
@@ -286,6 +338,7 @@ const updateQuoteTotal = () => {
   }
   updateQuoteStep(hasCompleteQuoteSelection());
   updateMobileQuoteAmount(price, monthly);
+  updateDesktopEstimateAmount(price, monthly);
 };
 
 frontWindowOptions.forEach((option) => {
