@@ -10,6 +10,61 @@
     <style>
       .brand { gap: 20px; }
       .brand-name { max-width: 320px; }
+      .desktop-action-bar { display: none; }
+      @media (min-width: 641px) {
+        body { padding-bottom: 96px; }
+        .desktop-action-bar {
+          position: fixed;
+          left: 50%;
+          bottom: 18px;
+          z-index: 40;
+          display: block;
+          width: min(680px, calc(100% - 48px));
+          transform: translateX(-50%);
+        }
+        .desktop-action-bar a {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          min-height: 70px;
+          padding: 14px 16px 14px 20px;
+          color: #172521;
+          text-decoration: none;
+          background: rgba(255, 255, 255, 0.96);
+          border: 1px solid rgba(219, 230, 226, 0.95);
+          border-radius: 8px;
+          box-shadow: 0 18px 48px rgba(21, 42, 36, 0.18);
+          backdrop-filter: blur(14px);
+        }
+        .desktop-action-copy {
+          display: grid;
+          gap: 2px;
+        }
+        .desktop-action-copy strong {
+          font-size: 1.08rem;
+          line-height: 1.2;
+        }
+        .desktop-action-copy small {
+          color: #5d6c67;
+          font-size: 0.84rem;
+          line-height: 1.25;
+        }
+        .desktop-action-cta {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 126px;
+          min-height: 42px;
+          padding: 10px 14px;
+          color: #ffffff;
+          font-weight: 850;
+          background: #0f8b8d;
+          border-radius: 8px;
+        }
+        .desktop-action-bar.is-progress .desktop-action-cta { background: #086367; }
+        .desktop-action-bar.is-ready .desktop-action-cta { background: #086367; }
+      }
       @media (max-width: 640px) {
         .brand { gap: 14px; }
       }
@@ -181,6 +236,16 @@
       </section>
     </main>
 
+    <div class="desktop-action-bar is-idle" aria-label="Estimate status">
+      <a id="desktop-estimate-action" href="#quote">
+        <span class="desktop-action-copy">
+          <strong id="desktop-estimate-main">See prices</strong>
+          <small id="desktop-estimate-sub">Quick estimate first</small>
+        </span>
+        <span class="desktop-action-cta" id="desktop-estimate-cta">See prices</span>
+      </a>
+    </div>
+
     <div class="mobile-action-bar is-single-action" aria-label="Quick actions">
       <a id="mobile-quote-amount" href="#quote">See prices</a>
     </div>
@@ -189,6 +254,6 @@
       <p>&copy; <span id="year">2026</span> B D Window Cleaning Services. Window cleaning made simple in the Southampton area.</p>
       <a href="#top">Back to top</a>
     </footer>
-    <script src="script.js?v=20260727-5"></script>
+    <script src="script.js?v=20260727-6"></script>
   </body>
 </html>
