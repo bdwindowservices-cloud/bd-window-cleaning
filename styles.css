@@ -307,23 +307,49 @@ h3 { margin-bottom: 8px; font-size: 1.2rem; line-height: 1.2; }
 
 .process { background: linear-gradient(180deg, var(--paper), var(--mist)); }
 .step-list {
+  counter-reset: booking-step;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  max-width: 1120px;
   margin: 0;
   padding: 0;
   list-style: none;
-  background: var(--line);
-  border: 1px solid var(--line);
 }
 .step-list li {
+  counter-increment: booking-step;
   display: grid;
-  gap: 10px;
-  padding: 26px;
+  grid-template-columns: 52px minmax(0, 1fr);
+  grid-template-areas:
+    "number title"
+    "number description";
+  gap: 5px 18px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
   background: var(--white);
 }
-.step-list strong { font-size: 1.15rem; }
-.step-list span { color: var(--muted); }
+.step-list li::before {
+  grid-area: number;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--accent-dark);
+  content: counter(booking-step);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+.step-list strong {
+  grid-area: title;
+  font-size: 1.15rem;
+}
+.step-list span {
+  grid-area: description;
+  color: var(--muted);
+}
 
 .quote-section {
   display: grid;
