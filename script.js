@@ -233,10 +233,10 @@ const setFloatingBookingDatePrompt = () => {
   const monthly = quoteTotalMonthly ? quoteTotalMonthly.textContent : "";
 
   if (price && desktopEstimateMain) {
-    desktopEstimateMain.textContent = `${price} per clean`;
+    desktopEstimateMain.textContent = `${price} per clean - Choose a cleaning date`;
   }
   if (desktopEstimateSub) {
-    desktopEstimateSub.textContent = monthly ? `${monthly} - Choose a cleaning date` : "Choose a cleaning date";
+    desktopEstimateSub.textContent = monthly;
   }
   if (desktopEstimateCta) {
     desktopEstimateCta.textContent = "Book clean";
@@ -246,7 +246,7 @@ const setFloatingBookingDatePrompt = () => {
     desktopActionBar.classList.remove("is-progress");
   }
   if (price && monthly && mobileQuoteAmount) {
-    mobileQuoteAmount.innerHTML = `<span>${price} per clean</span><small>${monthly} - Choose a cleaning date</small>`;
+    mobileQuoteAmount.innerHTML = `<span>${price} per clean - Choose a cleaning date</span><small>${monthly}</small>`;
   }
 };
 
