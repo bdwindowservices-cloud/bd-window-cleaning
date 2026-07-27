@@ -14,6 +14,7 @@ const estimatedQuoteInput = document.querySelector("#estimated-quote");
 const mobileActionBar = document.querySelector(".mobile-action-bar");
 const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
 const desktopActionBar = document.querySelector(".desktop-action-bar");
+const desktopEstimateAction = document.querySelector("#desktop-estimate-action");
 const desktopEstimateMain = document.querySelector("#desktop-estimate-main");
 const desktopEstimateSub = document.querySelector("#desktop-estimate-sub");
 const desktopEstimateCta = document.querySelector("#desktop-estimate-cta");
@@ -234,6 +235,40 @@ const closeQuoteDetails = () => {
   closeBookingDateStep();
 };
 
+const openQuoteDetails = () => {
+  if (!hasCompleteQuoteSelection()) {
+    updateQuoteStep(false);
+    if (backSideWindowOptions && !getCheckedOption(backSideInputs)) {
+      backSideWindowOptions.scrollIntoView({ behavior: "smooth", block: "center" });
+      const firstBackSideInput = backSideInputs[0];
+      if (firstBackSideInput) {
+        firstBackSideInput.focus();
+      }
+    }
+    return;
+  }
+
+  if (quoteDetails) {
+    quoteDetails.hidden = false;
+  }
+  closeBookingDateStep();
+  if (quoteNextHint) {
+    quoteNextHint.textContent = "Step 2: send your details to book a clean right now.";
+  }
+  if (quoteDetails) {
+    quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
+
+const handleFloatingEstimateAction = (event) => {
+  if (!hasCompleteQuoteSelection()) {
+    return;
+  }
+
+  event.preventDefault();
+  openQuoteDetails();
+};
+
 const updateQuoteStep = (hasCompleteSelection) => {
   if (quoteNextButton) {
     quoteNextButton.disabled = !hasCompleteSelection;
@@ -392,27 +427,16 @@ bookingDateOptions.forEach((option) => {
   });
 });
 
-if (quoteNextButton && quoteDetails) {
-  quoteNextButton.addEventListener("click", () => {
-    if (!hasCompleteQuoteSelection()) {
-      updateQuoteStep(false);
-      if (backSideWindowOptions && !getCheckedOption(backSideInputs)) {
-        backSideWindowOptions.scrollIntoView({ behavior: "smooth", block: "center" });
-        const firstBackSideInput = backSideInputs[0];
-        if (firstBackSideInput) {
-          firstBackSideInput.focus();
-        }
-      }
-      return;
-    }
+if (desktopEstimateAction) {
+  desktopEstimateAction.addEventListener("click", handleFloatingEstimateAction);
+}
 
-    quoteDetails.hidden = false;
-    closeBookingDateStep();
-    if (quoteNextHint) {
-      quoteNextHint.textContent = "Step 2: send your details to book a clean right now.";
-    }
-    quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
+if (mobileQuoteAmount) {
+  mobileQuoteAmount.addEventListener("click", handleFloatingEstimateAction);
+}
+
+if (quoteNextButton && quoteDetails) {
+  quoteNextButton.addEventListener("click", openQuoteDetails);
 }
 
 if (bookingNextButton && bookingDateStep) {
