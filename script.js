@@ -47,6 +47,10 @@ const formatMoney = (value) => {
 
 const getCheckedOption = (options) => Array.from(options).find((option) => option.checked);
 
+const hasCompleteQuoteSelection = () => Boolean(
+  getCheckedOption(frontWindowOptions) && getCheckedOption(backSideInputs)
+);
+
 const setSingleCheckedOption = (selectedOption, options) => {
   if (!selectedOption.checked) {
     return;
@@ -187,9 +191,14 @@ const updateQuoteStep = (hasCompleteSelection) => {
     return;
   }
 
-  quoteNextHint.textContent = hasCompleteSelection
-    ? "Your estimate is ready. Continue to send your details."
-    : "Choose your front and back/side options to continue.";
+  if (hasCompleteSelection) {
+    quoteNextHint.textContent = "Your estimate is ready. Continue to send your details.";
+    return;
+  }
+
+  quoteNextHint.textContent = getCheckedOption(frontWindowOptions)
+    ? "Choose a back/side option to continue."
+    : "Choose a front window option to continue.";
 };
 
 const updateQuoteTotal = () => {
@@ -275,7 +284,7 @@ const updateQuoteTotal = () => {
   if (estimatedQuoteInput) {
     estimatedQuoteInput.value = estimateText;
   }
-  updateQuoteStep(true);
+  updateQuoteStep(hasCompleteQuoteSelection());
   updateMobileQuoteAmount(price, monthly);
 };
 
@@ -331,6 +340,18 @@ bookingDateOptions.forEach((option) => {
 
 if (quoteNextButton && quoteDetails) {
   quoteNextButton.addEventListener("click", () => {
+    if (!hasCompleteQuoteSelection()) {
+      updateQuoteStep(false);
+      if (backSideWindowOptions && !getCheckedOption(backSideInputs)) {
+        backSideWindowOptions.scrollIntoView({ behavior: "smooth", block: "center" });
+        const firstBackSideInput = backSideInputs[0];
+        if (firstBackSideInput) {
+          firstBackSideInput.focus();
+        }
+      }
+      return;
+    }
+
     quoteDetails.hidden = false;
     closeBookingDateStep();
     if (quoteNextHint) {
