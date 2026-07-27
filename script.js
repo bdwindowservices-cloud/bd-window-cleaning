@@ -24,7 +24,6 @@ const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
 const formStatus = document.querySelector("#form-status");
 const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
 const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
-const dateLabels = ["First", "Second", "Third", "Fourth"];
 const formatCleaningDate = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
   day: "numeric",
@@ -104,7 +103,7 @@ const updateBookingDateOptions = () => {
     const dateIndex = Number(option.dataset.bookingDateIndex);
     const slot = option.dataset.bookingSlot;
     const dateText = formatCleaningDate.format(dates[dateIndex]);
-    const label = `${dateLabels[dateIndex]} available date - ${dateText}, ${slot}`;
+    const label = `${dateText}, ${slot}`;
     option.value = label;
     option.parentElement.lastChild.textContent = label;
   });
