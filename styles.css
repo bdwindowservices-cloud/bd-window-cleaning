@@ -357,13 +357,13 @@ h3 { margin-bottom: 8px; font-size: 1.2rem; line-height: 1.2; }
   gap: 16px;
   padding-top: 4px;
 }
-.quote-details[hidden] { display: none; }
-#quote-next-hint {
+.quote-details[hidden], .booking-date-choice[hidden] { display: none; }
+#quote-next-hint, #booking-next-hint {
   margin: 0;
   color: var(--muted);
   font-weight: 700;
 }
-.fixed-price-choice {
+.fixed-price-choice, .booking-date-choice {
   display: grid;
   gap: 12px;
   padding: 18px;
@@ -371,13 +371,13 @@ h3 { margin-bottom: 8px; font-size: 1.2rem; line-height: 1.2; }
   border-radius: 8px;
   background: linear-gradient(135deg, #e8f7f5, #f7faf8);
 }
-.fixed-price-choice legend {
+.fixed-price-choice legend, .booking-date-choice legend {
   padding: 0 8px;
   color: var(--accent-dark);
   font-size: 1.05rem;
   font-weight: 900;
 }
-.fixed-price-choice p {
+.fixed-price-choice p, .booking-date-choice p {
   margin: 0;
   color: var(--muted);
 }
@@ -425,6 +425,10 @@ h3 { margin-bottom: 8px; font-size: 1.2rem; line-height: 1.2; }
   border-radius: 8px;
   background: var(--white);
   font-weight: 850;
+}
+.checkbox-option:has(input:checked) {
+  border-color: var(--accent-dark);
+  background: var(--mist);
 }
 .checkbox-option input {
   width: 18px;
