@@ -16,6 +16,7 @@ const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
 const quoteNextButton = document.querySelector("#quote-next-button");
 const quoteNextHint = document.querySelector("#quote-next-hint");
 const quoteDetails = document.querySelector("#quote-details");
+const requiredQuoteDetailInputs = document.querySelectorAll("#quote-details input[required]");
 const bookingNextButton = document.querySelector("#booking-next-button");
 const bookingNextHint = document.querySelector("#booking-next-hint");
 const bookingDateStep = document.querySelector("#booking-date-step");
@@ -107,6 +108,17 @@ const updateBookingDateOptions = () => {
     option.value = label;
     option.parentElement.lastChild.textContent = label;
   });
+};
+
+const validateQuoteDetails = () => {
+  const invalidField = Array.from(requiredQuoteDetailInputs).find((field) => !field.checkValidity());
+  if (!invalidField) {
+    return true;
+  }
+
+  invalidField.reportValidity();
+  invalidField.focus();
+  return false;
 };
 
 const closeBookingDateStep = () => {
@@ -331,6 +343,10 @@ if (quoteNextButton && quoteDetails) {
 
 if (bookingNextButton && bookingDateStep) {
   bookingNextButton.addEventListener("click", () => {
+    if (!validateQuoteDetails()) {
+      return;
+    }
+
     updateBookingDateOptions();
     bookingDateStep.hidden = false;
     if (bookingNextHint) {
