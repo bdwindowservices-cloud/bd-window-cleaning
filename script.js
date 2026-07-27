@@ -15,8 +15,18 @@ const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
 const quoteNextButton = document.querySelector("#quote-next-button");
 const quoteNextHint = document.querySelector("#quote-next-hint");
 const quoteDetails = document.querySelector("#quote-details");
+const bookingNextButton = document.querySelector("#booking-next-button");
+const bookingNextHint = document.querySelector("#booking-next-hint");
+const bookingDateStep = document.querySelector("#booking-date-step");
+const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
 const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
 const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
+const dateLabels = ["First", "Second", "Third", "Fourth"];
+const formatCleaningDate = new Intl.DateTimeFormat("en-GB", {
+  weekday: "long",
+  day: "numeric",
+  month: "long"
+});
 
 if (year) {
   year.textContent = new Date().getFullYear();
@@ -51,6 +61,57 @@ const clearOptions = (options) => {
   options.forEach((option) => {
     option.checked = false;
   });
+};
+
+const addDays = (date, days) => {
+  const nextDate = new Date(date);
+  nextDate.setDate(nextDate.getDate() + days);
+  return nextDate;
+};
+
+const isCleaningDay = (date) => {
+  const day = date.getDay();
+  return day >= 1 && day <= 4;
+};
+
+const moveToCleaningDay = (date) => {
+  let nextDate = new Date(date);
+  while (!isCleaningDay(nextDate)) {
+    nextDate = addDays(nextDate, 1);
+  }
+  return nextDate;
+};
+
+const getAvailableCleaningDates = () => {
+  const firstDate = moveToCleaningDay(addDays(new Date(), 2));
+  const dates = [firstDate];
+
+  while (dates.length < 4) {
+    const followingDate = moveToCleaningDay(addDays(dates[dates.length - 1], 1));
+    dates.push(followingDate);
+  }
+
+  return dates;
+};
+
+const updateBookingDateOptions = () => {
+  const dates = getAvailableCleaningDates();
+
+  document.querySelectorAll("[data-booking-date-index]").forEach((option) => {
+    const dateIndex = Number(option.dataset.bookingDateIndex);
+    const slot = option.dataset.bookingSlot;
+    const dateText = formatCleaningDate.format(dates[dateIndex]);
+    const label = `${dateLabels[dateIndex]} available date - ${dateText}, ${slot}`;
+    option.value = label;
+    option.parentElement.lastChild.textContent = label;
+  });
+};
+
+const closeBookingDateStep = () => {
+  if (bookingDateStep) {
+    bookingDateStep.hidden = true;
+  }
+  clearOptions(bookingDateOptions);
 };
 
 const setQuoteProgressState = (isInProgress) => {
@@ -99,6 +160,7 @@ const closeQuoteDetails = () => {
   if (quoteDetails) {
     quoteDetails.hidden = true;
   }
+  closeBookingDateStep();
 };
 
 const updateQuoteStep = (hasCompleteSelection) => {
@@ -242,9 +304,16 @@ extraInputs.forEach((option) => {
   });
 });
 
+bookingDateOptions.forEach((option) => {
+  option.addEventListener("change", () => {
+    setSingleCheckedOption(option, bookingDateOptions);
+  });
+});
+
 if (quoteNextButton && quoteDetails) {
   quoteNextButton.addEventListener("click", () => {
     quoteDetails.hidden = false;
+    closeBookingDateStep();
     if (quoteNextHint) {
       quoteNextHint.textContent = "Step 2: send your details so we can arrange the quote.";
     }
@@ -252,4 +321,16 @@ if (quoteNextButton && quoteDetails) {
   });
 }
 
+if (bookingNextButton && bookingDateStep) {
+  bookingNextButton.addEventListener("click", () => {
+    updateBookingDateOptions();
+    bookingDateStep.hidden = false;
+    if (bookingNextHint) {
+      bookingNextHint.textContent = "Step 3: choose a cleaning date before sending your request.";
+    }
+    bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+updateBookingDateOptions();
 updateQuoteTotal();
