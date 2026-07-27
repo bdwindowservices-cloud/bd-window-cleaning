@@ -228,6 +228,28 @@ const updateDesktopEstimateAmount = (price, monthly) => {
   );
 };
 
+const setFloatingBookingDatePrompt = () => {
+  const price = quoteTotalPrice ? quoteTotalPrice.textContent : "";
+  const monthly = quoteTotalMonthly ? quoteTotalMonthly.textContent : "";
+
+  if (price && desktopEstimateMain) {
+    desktopEstimateMain.textContent = `${price} per clean`;
+  }
+  if (desktopEstimateSub) {
+    desktopEstimateSub.textContent = monthly ? `${monthly} - Choose a cleaning date` : "Choose a cleaning date";
+  }
+  if (desktopEstimateCta) {
+    desktopEstimateCta.textContent = "Book clean";
+  }
+  if (desktopActionBar) {
+    desktopActionBar.classList.add("is-ready");
+    desktopActionBar.classList.remove("is-progress");
+  }
+  if (price && monthly && mobileQuoteAmount) {
+    mobileQuoteAmount.innerHTML = `<span>${price} per clean</span><small>${monthly} - Choose a cleaning date</small>`;
+  }
+};
+
 const openBookingDateStep = () => {
   if (!validateQuoteDetails()) {
     return;
@@ -240,6 +262,7 @@ const openBookingDateStep = () => {
   if (bookingNextHint) {
     bookingNextHint.textContent = "Step 3: choose a cleaning date before sending your request.";
   }
+  setFloatingBookingDatePrompt();
   if (bookingDateStep) {
     bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -482,6 +505,7 @@ if (quoteForm) {
         bookingDateStep.hidden = false;
         bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+      setFloatingBookingDatePrompt();
       return;
     }
 
