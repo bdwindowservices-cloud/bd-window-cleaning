@@ -6,7 +6,7 @@
     <title>B D Window Cleaning Services | Southampton Window Cleaning</title>
     <meta name="description" content="Simple, reliable window cleaning in Southampton. Request a fixed quote for regular or one-off pure water window cleaning.">
     <link rel="preload" href="assets/window-cleaning-hero.svg" as="image">
-    <link rel="stylesheet" href="styles.css?v=20260728-2">
+    <link rel="stylesheet" href="styles.css?v=20260728-3">
     <style>
       .brand { gap: 20px; }
       .brand-name { max-width: 320px; }
@@ -143,6 +143,7 @@
           <input type="hidden" name="Front window sets" id="front-window-sets-input" value="">
           <input type="hidden" name="Back or side window sets" id="back-side-window-sets-input" value="">
           <input type="hidden" name="Extras" id="extras-input" value="">
+          <input type="hidden" name="Front only clean" id="front-only-input" value="No">
           <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display: none;">
           <fieldset class="fixed-price-choice price-builder wide">
             <legend>Tap for a price!</legend>
@@ -158,26 +159,26 @@
                   <div class="counter-card" data-counter-card="front">
                     <div>
                       <strong>Front window sets</strong>
-                      <span>Groups of windows at the front of your home.</span>
+                      <span>Choose the closest range for the front of your home.</span>
                     </div>
                     <div class="counter-control">
-                      <button type="button" data-counter-action="decrease" data-counter-target="front" aria-label="Reduce front window sets">-</button>
-                      <output id="front-window-count" aria-live="polite">0</output>
-                      <button type="button" data-counter-action="increase" data-counter-target="front" aria-label="Add front window sets">+</button>
+                      <button type="button" data-counter-action="decrease" data-counter-target="front" aria-label="Choose fewer front window sets">-</button>
+                      <output id="front-window-count" aria-live="polite">1 to 2</output>
+                      <button type="button" data-counter-action="increase" data-counter-target="front" aria-label="Choose more front window sets">+</button>
                     </div>
                   </div>
                   <div class="counter-card" data-counter-card="back">
                     <div>
                       <strong>Back or side window sets</strong>
-                      <span>Leave at 0 if you only need the fronts cleaned.</span>
                     </div>
                     <div class="counter-control">
-                      <button type="button" data-counter-action="decrease" data-counter-target="back" aria-label="Reduce back or side window sets">-</button>
+                      <button type="button" data-counter-action="decrease" data-counter-target="back" aria-label="Choose fewer back or side window sets">-</button>
                       <output id="back-window-count" aria-live="polite">0</output>
-                      <button type="button" data-counter-action="increase" data-counter-target="back" aria-label="Add back or side window sets">+</button>
+                      <button type="button" data-counter-action="increase" data-counter-target="back" aria-label="Choose more back or side window sets">+</button>
                     </div>
                   </div>
                 </div>
+                <label class="front-only-option"><input id="front-only-clean" type="checkbox">Front Only Clean</label>
                 <div class="extra-choice" aria-label="Extras">
                   <p><strong>Extras?</strong></p>
                   <div class="addon-options">
@@ -287,6 +288,6 @@
       <p>&copy; <span id="year">2026</span> B D Window Cleaning Services. Window cleaning made simple in the Southampton area.</p>
       <a href="#top">Back to top</a>
     </footer>
-    <script src="script.js?v=20260728-2"></script>
+    <script src="script.js?v=20260728-3"></script>
   </body>
 </html>
