@@ -39,6 +39,26 @@
       .preview-house {
         width: min(100%, 360px);
         min-height: 300px;
+        overflow: hidden;
+        border-radius: 8px;
+        background: #dcecf2;
+        box-shadow: 0 18px 28px rgba(21, 42, 36, 0.16);
+      }
+      .house-preview-photo {
+        display: block;
+        width: 100%;
+        min-height: 300px;
+        aspect-ratio: 4 / 3;
+        object-fit: cover;
+      }
+      .house-preview-bespoke {
+        display: grid;
+        place-items: center;
+        min-height: 300px;
+        color: #07575b;
+        background: linear-gradient(135deg, #eef8f7, #dcecf2);
+        font-size: clamp(3rem, 8vw, 5.4rem);
+        font-weight: 900;
       }
       .preview-roof {
         position: relative;
@@ -150,7 +170,7 @@
       }
       @media (max-width: 640px) {
         .brand { gap: 14px; }
-        .preview-house { min-height: 264px; }
+        .preview-house, .house-preview-photo, .house-preview-bespoke { min-height: 264px; }
         .preview-wall { min-height: 204px; padding: 20px 16px 36px; }
         .preview-grid { width: min(100%, 220px); gap: 10px; }
       }
@@ -372,6 +392,7 @@
       <p>&copy; <span id="year">2026</span> B D Window Cleaning Services. Window cleaning made simple in the Southampton area.</p>
       <a href="#top">Back to top</a>
     </footer>
-    <script src="script.js?v=20260728-5"></script>
+    <script src="script.js?v=20260728-6"></script>
+    <script src="preview-house-images.js?v=20260728-1"></script>
   </body>
 </html>
