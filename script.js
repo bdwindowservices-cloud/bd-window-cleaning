@@ -41,9 +41,9 @@ const desktopEstimateDefaultSub = desktopEstimateSub ? desktopEstimateSub.textCo
 const desktopEstimateDefaultCta = desktopEstimateCta ? desktopEstimateCta.textContent : "";
 const frontOptions = [
   { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 12 },
-  { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 4, price: 15 },
-  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 18 },
-  { label: "7 to 8", emailLabel: "7 to 8 sets", previewSets: 8, price: 21 },
+  { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 3, price: 15 },
+  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 5, price: 18 },
+  { label: "7 to 8", emailLabel: "7 to 8 sets", previewSets: 7, price: 21 },
   { label: "9+ bespoke", emailLabel: "9+ sets - bespoke quote", previewSets: 0, price: null, bespoke: true }
 ];
 const backOptions = [
@@ -277,10 +277,10 @@ const updateWindowPreview = () => {
   }
 
   const frontOption = getFrontOption();
-  const backOption = getBackOption();
   const isBespoke = Boolean(frontOption.bespoke);
-  const totalSets = isBespoke ? 0 : frontOption.previewSets + (quoteState.frontOnly ? 0 : backOption.previewSets);
+  const totalSets = isBespoke ? 0 : frontOption.previewSets;
   previewGrid.innerHTML = "";
+  previewGrid.dataset.windowCount = String(totalSets);
 
   for (let index = 0; index < totalSets; index += 1) {
     const windowSet = document.createElement("span");
@@ -294,7 +294,7 @@ const updateWindowPreview = () => {
       previewCaption.textContent = "9+ front window sets selected. We will confirm a bespoke quote.";
       return;
     }
-    previewCaption.textContent = `${frontOption.label} front window sets${quoteState.frontOnly ? ", front only clean" : ""}.`;
+    previewCaption.textContent = `Front example: ${frontOption.label} window sets.`;
   }
 };
 
