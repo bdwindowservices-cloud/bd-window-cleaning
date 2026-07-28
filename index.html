@@ -11,6 +11,30 @@
       .brand { gap: 20px; }
       .brand-name { max-width: 320px; }
       .desktop-action-bar { display: none; }
+      .front-only-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border: 1px solid #dbe6e2;
+        border-radius: 8px;
+        background: #ffffff;
+        font-weight: 850;
+      }
+      .front-only-option:has(input:checked) {
+        border-color: #07575b;
+        background: #e8f3ef;
+      }
+      .front-only-option input {
+        width: 18px;
+        height: 18px;
+        min-height: 0;
+        padding: 0;
+        accent-color: #07575b;
+      }
+      .counter-card.is-disabled {
+        opacity: 0.58;
+      }
       @media (min-width: 641px) {
         body { padding-bottom: 96px; }
         .desktop-action-bar {
