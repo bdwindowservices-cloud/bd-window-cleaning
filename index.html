@@ -6,7 +6,7 @@
     <title>B D Window Cleaning Services | Southampton Window Cleaning</title>
     <meta name="description" content="Simple, reliable window cleaning in Southampton. Request a fixed quote for regular or one-off pure water window cleaning.">
     <link rel="preload" href="assets/window-cleaning-hero.svg" as="image">
-    <link rel="stylesheet" href="styles.css?v=20260728-4">
+    <link rel="stylesheet" href="styles.css?v=20260728-5">
     <style>
       .brand { gap: 20px; }
       .brand-name { max-width: 320px; }
@@ -32,9 +32,77 @@
         padding: 0;
         accent-color: #07575b;
       }
-      .counter-card.is-disabled {
-        opacity: 0.58;
+      .counter-card.is-disabled { opacity: 0.58; }
+      .window-set-preview {
+        background: linear-gradient(180deg, #dcecf2 0%, #eef8f7 68%, #d7ead6 100%);
       }
+      .preview-house {
+        width: min(100%, 360px);
+        min-height: 300px;
+      }
+      .preview-roof {
+        position: relative;
+        width: 92%;
+        height: 58px;
+        margin: 0 auto -1px;
+        background:
+          repeating-linear-gradient(0deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 8px),
+          linear-gradient(135deg, #8c7662, #4e4138);
+        clip-path: polygon(8% 100%, 18% 0, 82% 0, 96% 100%);
+        box-shadow: 0 10px 18px rgba(21, 42, 36, 0.18);
+      }
+      .preview-roof::before {
+        position: absolute;
+        top: 10px;
+        left: 16%;
+        width: 28px;
+        height: 48px;
+        background: linear-gradient(90deg, #8b4c34, #5e2f22);
+        box-shadow: inset 0 0 0 2px rgba(255,255,255,0.14);
+        content: "";
+      }
+      .preview-wall {
+        min-height: 230px;
+        padding: 24px 22px 42px;
+        border: 0;
+        border-radius: 4px 4px 8px 8px;
+        background:
+          linear-gradient(90deg, rgba(255,255,255,0.12) 1px, transparent 1px) 0 0 / 38px 18px,
+          linear-gradient(rgba(255,255,255,0.16) 1px, transparent 1px) 0 0 / 100% 18px,
+          linear-gradient(135deg, #a85435, #7d3828 58%, #9f4e32);
+        box-shadow: 0 18px 28px rgba(21, 42, 36, 0.16);
+      }
+      .preview-wall::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 24px;
+        background: linear-gradient(180deg, rgba(51, 106, 49, 0.2), rgba(51, 106, 49, 0.42));
+        content: "";
+      }
+      .preview-grid {
+        width: min(100%, 270px);
+        gap: 14px;
+        align-items: start;
+      }
+      .preview-grid[data-window-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 190px; }
+      .preview-grid[data-window-count="3"] { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 230px; }
+      .preview-grid[data-window-count="5"],
+      .preview-grid[data-window-count="7"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .preview-window-set {
+        aspect-ratio: 1 / 1.02;
+        border: 5px solid #f7fbfb;
+        border-radius: 2px;
+        background:
+          linear-gradient(120deg, rgba(255,255,255,0.6) 0 18%, transparent 18% 100%),
+          linear-gradient(135deg, #9dbbc3, #f6fbfb 58%, #b7d7df);
+        box-shadow: inset 0 0 0 1px rgba(7, 87, 91, 0.18), 0 7px 13px rgba(21, 42, 36, 0.22);
+      }
+      .preview-window-set:nth-child(3) { grid-column: 1 / 2; }
+      .preview-window-set::before { width: 3px; background: rgba(247,251,251,0.88); }
+      .preview-window-set::after { height: 3px; background: rgba(247,251,251,0.88); }
+      .preview-door { display: none; }
       @media (min-width: 641px) {
         body { padding-bottom: 96px; }
         .desktop-action-bar {
@@ -61,19 +129,9 @@
           box-shadow: 0 18px 48px rgba(21, 42, 36, 0.18);
           backdrop-filter: blur(14px);
         }
-        .desktop-action-copy {
-          display: grid;
-          gap: 2px;
-        }
-        .desktop-action-copy strong {
-          font-size: 1.08rem;
-          line-height: 1.2;
-        }
-        .desktop-action-copy small {
-          color: #5d6c67;
-          font-size: 0.84rem;
-          line-height: 1.25;
-        }
+        .desktop-action-copy { display: grid; gap: 2px; }
+        .desktop-action-copy strong { font-size: 1.08rem; line-height: 1.2; }
+        .desktop-action-copy small { color: #5d6c67; font-size: 0.84rem; line-height: 1.25; }
         .desktop-action-copy small:empty { display: none; }
         .desktop-action-cta {
           display: inline-flex;
@@ -92,6 +150,9 @@
       }
       @media (max-width: 640px) {
         .brand { gap: 14px; }
+        .preview-house { min-height: 264px; }
+        .preview-wall { min-height: 204px; padding: 20px 16px 36px; }
+        .preview-grid { width: min(100%, 220px); gap: 10px; }
       }
     </style>
   </head>
@@ -216,10 +277,9 @@
                   <div class="preview-roof"></div>
                   <div class="preview-wall">
                     <div class="preview-grid" id="window-preview-grid"></div>
-                    <div class="preview-door"></div>
                   </div>
                 </div>
-                <p id="window-preview-caption">Add window sets to see the preview.</p>
+                <p id="window-preview-caption">Front example: 1 to 2 window sets.</p>
               </div>
             </div>
           </fieldset>
@@ -312,6 +372,6 @@
       <p>&copy; <span id="year">2026</span> B D Window Cleaning Services. Window cleaning made simple in the Southampton area.</p>
       <a href="#top">Back to top</a>
     </footer>
-    <script src="script.js?v=20260728-4"></script>
+    <script src="script.js?v=20260728-5"></script>
   </body>
 </html>
