@@ -2,11 +2,15 @@ const year = document.querySelector("#year");
 const quoteForm = document.querySelector("#quote-form");
 const quoteStatus = document.querySelector("#quote-status");
 const params = new URLSearchParams(window.location.search);
-const frontWindowOptions = document.querySelectorAll("[data-front-window-option]");
-const backSideWindowOptions = document.querySelector("#back-side-window-options");
-const backSideInputs = document.querySelectorAll("[data-back-side-window-option]");
-const extraOptions = document.querySelector("#extra-options");
-const extraInputs = document.querySelectorAll("[data-extra-option]");
+const counterButtons = document.querySelectorAll("[data-counter-action]");
+const frontWindowCount = document.querySelector("#front-window-count");
+const backWindowCount = document.querySelector("#back-window-count");
+const frontWindowSetsInput = document.querySelector("#front-window-sets-input");
+const backSideWindowSetsInput = document.querySelector("#back-side-window-sets-input");
+const extrasInput = document.querySelector("#extras-input");
+const extraButtons = document.querySelectorAll("[data-extra-button]");
+const previewGrid = document.querySelector("#window-preview-grid");
+const previewCaption = document.querySelector("#window-preview-caption");
 const quoteTotal = document.querySelector("#quote-total");
 const quoteTotalPrice = document.querySelector("#quote-total-price");
 const quoteTotalMonthly = document.querySelector("#quote-total-monthly");
@@ -33,6 +37,13 @@ const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent
 const desktopEstimateDefaultMain = desktopEstimateMain ? desktopEstimateMain.textContent : "";
 const desktopEstimateDefaultSub = desktopEstimateSub ? desktopEstimateSub.textContent : "";
 const desktopEstimateDefaultCta = desktopEstimateCta ? desktopEstimateCta.textContent : "";
+const maxWindowSets = 6;
+const quoteState = {
+  front: 0,
+  back: 0,
+  extra: "",
+  extraPrice: 0
+};
 const formatCleaningDate = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
   day: "numeric",
@@ -54,11 +65,29 @@ const formatMoney = (value) => {
   return Number.isInteger(number) ? `£${number}` : `£${number.toFixed(2)}`;
 };
 
-const getCheckedOption = (options) => Array.from(options).find((option) => option.checked);
+const getWindowBandPrice = (count, bands) => {
+  if (count <= 0) {
+    return 0;
+  }
+  if (count <= 2) {
+    return bands[0];
+  }
+  if (count <= 4) {
+    return bands[1];
+  }
+  return bands[2];
+};
 
-const hasCompleteQuoteSelection = () => Boolean(
-  getCheckedOption(frontWindowOptions) && getCheckedOption(backSideInputs)
-);
+const getWindowSetLabel = (label, count) => {
+  if (count <= 0) {
+    return `${label}: 0 sets`;
+  }
+  return `${label}: ${count} ${count === 1 ? "set" : "sets"} of windows`;
+};
+
+const hasCompleteQuoteSelection = () => quoteState.front > 0;
+
+const getCheckedOption = (options) => Array.from(options).find((option) => option.checked);
 
 const setSingleCheckedOption = (selectedOption, options) => {
   if (!selectedOption.checked) {
@@ -210,15 +239,6 @@ const resetDesktopEstimateAmount = () => {
   );
 };
 
-const setDesktopEstimateProgress = () => {
-  setDesktopEstimateState(
-    "Estimate in progress",
-    "Choose a back/side option to see your price.",
-    "Continue",
-    "progress"
-  );
-};
-
 const updateDesktopEstimateAmount = (price, monthly) => {
   setDesktopEstimateState(
     `${price} per clean`,
@@ -226,6 +246,45 @@ const updateDesktopEstimateAmount = (price, monthly) => {
     "Book clean",
     "ready"
   );
+};
+
+const updateHiddenQuoteFields = () => {
+  if (frontWindowSetsInput) {
+    frontWindowSetsInput.value = quoteState.front > 0 ? getWindowSetLabel("Front", quoteState.front) : "";
+  }
+  if (backSideWindowSetsInput) {
+    backSideWindowSetsInput.value = quoteState.back > 0
+      ? getWindowSetLabel("Back or side", quoteState.back)
+      : "Back or side: 0 sets / fronts only";
+  }
+  if (extrasInput) {
+    extrasInput.value = quoteState.extra || "No extras selected";
+  }
+};
+
+const updateWindowPreview = () => {
+  if (!previewGrid) {
+    return;
+  }
+
+  const totalSets = quoteState.front + quoteState.back;
+  previewGrid.innerHTML = "";
+
+  const visibleSets = Math.max(totalSets, 0);
+  for (let index = 0; index < visibleSets; index += 1) {
+    const windowSet = document.createElement("span");
+    windowSet.className = "preview-window-set";
+    windowSet.setAttribute("aria-hidden", "true");
+    previewGrid.append(windowSet);
+  }
+
+  if (previewCaption) {
+    if (totalSets === 0) {
+      previewCaption.textContent = "Add window sets to see the preview.";
+      return;
+    }
+    previewCaption.textContent = `${totalSets} ${totalSets === 1 ? "set" : "sets"} of windows selected.`;
+  }
 };
 
 const setFloatingBookingDatePrompt = () => {
@@ -250,6 +309,99 @@ const setFloatingBookingDatePrompt = () => {
   }
 };
 
+const closeQuoteDetails = () => {
+  if (quoteDetails) {
+    quoteDetails.hidden = true;
+  }
+  closeBookingDateStep();
+};
+
+const updateQuoteStep = (hasCompleteSelection) => {
+  if (quoteNextButton) {
+    quoteNextButton.disabled = !hasCompleteSelection;
+  }
+  if (!quoteNextHint) {
+    return;
+  }
+
+  quoteNextHint.textContent = hasCompleteSelection
+    ? "Your estimate is ready. Continue to send your details."
+    : "Add front window sets to continue.";
+};
+
+const updateQuoteTotal = () => {
+  const frontPrice = getWindowBandPrice(quoteState.front, [12, 15, 18]);
+  const backSideExtra = getWindowBandPrice(quoteState.back, [6, 8, 10]);
+  const totalPrice = frontPrice + backSideExtra + quoteState.extraPrice;
+  const monthlyPrice = totalPrice * 2 / 3;
+  const price = formatMoney(totalPrice);
+  const monthly = formatMoney(monthlyPrice);
+
+  setQuoteProgressState(false);
+  if (quoteTotal) {
+    quoteTotal.hidden = false;
+  }
+
+  if (!hasCompleteQuoteSelection()) {
+    if (quoteTotalPrice) {
+      quoteTotalPrice.textContent = "£-";
+    }
+    if (quoteTotalMonthly) {
+      quoteTotalMonthly.textContent = "Add front window sets to see your estimate.";
+    }
+    if (estimatedQuoteInput) {
+      estimatedQuoteInput.value = "";
+    }
+    resetMobileQuoteAmount();
+    resetDesktopEstimateAmount();
+    updateQuoteStep(false);
+    updateHiddenQuoteFields();
+    updateWindowPreview();
+    closeQuoteDetails();
+    return;
+  }
+
+  if (quoteTotalPrice) {
+    quoteTotalPrice.textContent = price;
+  }
+  if (quoteTotalMonthly) {
+    quoteTotalMonthly.textContent = `${monthly} per month`;
+  }
+  if (estimatedQuoteInput) {
+    estimatedQuoteInput.value = `${price} (${monthly} per month)`;
+  }
+
+  updateQuoteStep(true);
+  updateHiddenQuoteFields();
+  updateWindowPreview();
+  updateMobileQuoteAmount(price, monthly);
+  updateDesktopEstimateAmount(price, monthly);
+};
+
+const updateCounters = () => {
+  if (frontWindowCount) {
+    frontWindowCount.textContent = quoteState.front;
+  }
+  if (backWindowCount) {
+    backWindowCount.textContent = quoteState.back;
+  }
+
+  counterButtons.forEach((button) => {
+    const target = button.dataset.counterTarget;
+    const action = button.dataset.counterAction;
+    const value = quoteState[target];
+    button.disabled = (action === "decrease" && value <= 0) || (action === "increase" && value >= maxWindowSets);
+  });
+};
+
+const updateExtraButtons = () => {
+  extraButtons.forEach((button) => {
+    const isSelected = quoteState.extra === button.dataset.extraValue;
+    button.classList.toggle("is-selected", isSelected);
+    button.setAttribute("aria-pressed", String(isSelected));
+  });
+};
+
 const openBookingDateStep = () => {
   if (!validateQuoteDetails()) {
     return;
@@ -268,22 +420,11 @@ const openBookingDateStep = () => {
   }
 };
 
-const closeQuoteDetails = () => {
-  if (quoteDetails) {
-    quoteDetails.hidden = true;
-  }
-  closeBookingDateStep();
-};
-
 const openQuoteDetails = () => {
   if (!hasCompleteQuoteSelection()) {
     updateQuoteStep(false);
-    if (backSideWindowOptions && !getCheckedOption(backSideInputs)) {
-      backSideWindowOptions.scrollIntoView({ behavior: "smooth", block: "center" });
-      const firstBackSideInput = backSideInputs[0];
-      if (firstBackSideInput) {
-        firstBackSideInput.focus();
-      }
+    if (quoteTotal) {
+      quoteTotal.scrollIntoView({ behavior: "smooth", block: "center" });
     }
     return;
   }
@@ -315,151 +456,24 @@ const handleFloatingEstimateAction = (event) => {
   openQuoteDetails();
 };
 
-const updateQuoteStep = (hasCompleteSelection) => {
-  if (quoteNextButton) {
-    quoteNextButton.disabled = !hasCompleteSelection;
-  }
-  if (!quoteNextHint) {
-    return;
-  }
-
-  if (hasCompleteSelection) {
-    quoteNextHint.textContent = "Your estimate is ready. Continue to send your details.";
-    return;
-  }
-
-  quoteNextHint.textContent = getCheckedOption(frontWindowOptions)
-    ? "Choose a back/side option to continue."
-    : "Choose a front window option to continue.";
-};
-
-const updateQuoteTotal = () => {
-  const selectedFront = getCheckedOption(frontWindowOptions);
-  const selectedBackSide = getCheckedOption(backSideInputs);
-  const selectedExtra = getCheckedOption(extraInputs);
-
-  if (extraOptions) {
-    extraOptions.hidden = !selectedBackSide;
-  }
-
-  if (!selectedFront) {
-    if (backSideWindowOptions) {
-      backSideWindowOptions.hidden = true;
-    }
-    if (extraOptions) {
-      extraOptions.hidden = true;
-    }
-    clearOptions(backSideInputs);
-    clearOptions(extraInputs);
-    setQuoteProgressState(false);
-    if (quoteTotal) {
-      quoteTotal.hidden = false;
-    }
-    if (quoteTotalPrice) {
-      quoteTotalPrice.textContent = "£-";
-    }
-    if (quoteTotalMonthly) {
-      quoteTotalMonthly.textContent = "Choose a front window option to see your quote.";
-    }
-    if (estimatedQuoteInput) {
-      estimatedQuoteInput.value = "";
-    }
-    resetMobileQuoteAmount();
-    resetDesktopEstimateAmount();
-    updateQuoteStep(false);
-    closeQuoteDetails();
-    return;
-  }
-
-  if (!selectedBackSide) {
-    if (extraOptions) {
-      extraOptions.hidden = true;
-    }
-    clearOptions(extraInputs);
-    setQuoteProgressState(true);
-    if (quoteTotal) {
-      quoteTotal.hidden = false;
-    }
-    if (quoteTotalPrice) {
-      quoteTotalPrice.textContent = "Estimate in progress";
-    }
-    if (quoteTotalMonthly) {
-      quoteTotalMonthly.textContent = "Choose a back/side option to see your price.";
-    }
-    if (estimatedQuoteInput) {
-      estimatedQuoteInput.value = "";
-    }
-    setMobileActionText("Estimate in progress");
-    setDesktopEstimateProgress();
-    updateQuoteStep(false);
-    closeQuoteDetails();
-    return;
-  }
-
-  setQuoteProgressState(false);
-  const frontPrice = Number(selectedFront.dataset.price || 0);
-  const backSideExtra = Number(selectedBackSide.dataset.extra || 0);
-  const extraPrice = selectedExtra ? Number(selectedExtra.dataset.extra || 0) : 0;
-  const totalPrice = frontPrice + backSideExtra + extraPrice;
-  const monthlyPrice = totalPrice * 2 / 3;
-  const price = formatMoney(totalPrice);
-  const monthly = formatMoney(monthlyPrice);
-  const estimateText = `${price} (${monthly} per month)`;
-
-  if (quoteTotal) {
-    quoteTotal.hidden = false;
-  }
-  if (quoteTotalPrice) {
-    quoteTotalPrice.textContent = price;
-  }
-  if (quoteTotalMonthly) {
-    quoteTotalMonthly.textContent = `${monthly} per month`;
-  }
-  if (estimatedQuoteInput) {
-    estimatedQuoteInput.value = estimateText;
-  }
-  updateQuoteStep(hasCompleteQuoteSelection());
-  updateMobileQuoteAmount(price, monthly);
-  updateDesktopEstimateAmount(price, monthly);
-};
-
-frontWindowOptions.forEach((option) => {
-  option.addEventListener("change", () => {
-    setSingleCheckedOption(option, frontWindowOptions);
-
-    const hasFrontSelection = Boolean(getCheckedOption(frontWindowOptions));
-    if (backSideWindowOptions) {
-      backSideWindowOptions.hidden = !hasFrontSelection;
-    }
-    if (!hasFrontSelection) {
-      clearOptions(backSideInputs);
-      clearOptions(extraInputs);
-      if (extraOptions) {
-        extraOptions.hidden = true;
-      }
-    }
-
+counterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const target = button.dataset.counterTarget;
+    const action = button.dataset.counterAction;
+    const direction = action === "increase" ? 1 : -1;
+    quoteState[target] = Math.min(maxWindowSets, Math.max(0, quoteState[target] + direction));
+    updateCounters();
     updateQuoteTotal();
   });
 });
 
-backSideInputs.forEach((option) => {
-  option.addEventListener("change", () => {
-    setSingleCheckedOption(option, backSideInputs);
-    const hasBackSideSelection = Boolean(getCheckedOption(backSideInputs));
-    if (extraOptions) {
-      extraOptions.hidden = !hasBackSideSelection;
-    }
-    if (!hasBackSideSelection) {
-      clearOptions(extraInputs);
-    }
-    updateQuoteTotal();
-  });
-});
-
-extraInputs.forEach((option) => {
-  option.addEventListener("change", () => {
-    setSingleCheckedOption(option, extraInputs);
+extraButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.dataset.extraValue;
+    const isSelected = quoteState.extra === value;
+    quoteState.extra = isSelected ? "" : value;
+    quoteState.extraPrice = isSelected ? 0 : Number(button.dataset.extraPrice || 0);
+    updateExtraButtons();
     updateQuoteTotal();
   });
 });
@@ -520,4 +534,6 @@ if (quoteForm) {
 }
 
 updateBookingDateOptions();
+updateCounters();
+updateExtraButtons();
 updateQuoteTotal();
