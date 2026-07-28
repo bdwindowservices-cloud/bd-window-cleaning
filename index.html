@@ -6,7 +6,7 @@
     <title>B D Window Cleaning Services | Southampton Window Cleaning</title>
     <meta name="description" content="Simple, reliable window cleaning in Southampton. Request a fixed quote for regular or one-off pure water window cleaning.">
     <link rel="preload" href="assets/window-cleaning-hero.svg" as="image">
-    <link rel="stylesheet" href="styles.css?v=20260727-8">
+    <link rel="stylesheet" href="styles.css?v=20260728-1">
     <style>
       .brand { gap: 20px; }
       .brand-name { max-width: 320px; }
@@ -140,35 +140,67 @@
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_next" value="https://bdwindowservices-cloud.github.io/bd-window-cleaning/?quote=sent#quote-status">
           <input type="hidden" name="Estimated quote" id="estimated-quote" value="">
+          <input type="hidden" name="Front window sets" id="front-window-sets-input" value="">
+          <input type="hidden" name="Back or side window sets" id="back-side-window-sets-input" value="">
+          <input type="hidden" name="Extras" id="extras-input" value="">
           <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display: none;">
-          <fieldset class="fixed-price-choice wide">
+          <fieldset class="fixed-price-choice price-builder wide">
             <legend>Tap for a price!</legend>
-            <p>Roughly how many windows do you have?<br>Count each grouped window as one. It doesn’t need to be exact.</p>
-            <div class="quote-total" id="quote-total" hidden aria-live="polite">
-              <span>Estimated price</span>
-              <strong id="quote-total-price">£0</strong>
-              <small id="quote-total-monthly">Choose a front window option to see your quote.</small>
-            </div>
-            <p><strong>How many sets of windows are at the front of your house?</strong></p>
-            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 1 - 2 sets of windows" data-front-window-option data-price="12">Front 1 - 2 sets of windows</label>
-            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 3 - 4 sets of windows" data-front-window-option data-price="15">Front 3 - 4 sets of windows</label>
-            <label class="checkbox-option"><input type="checkbox" name="Front window sets" value="Front 5 - 6 sets of windows" data-front-window-option data-price="18">Front 5 - 6 sets of windows</label>
-            <div id="back-side-window-options" class="conditional-options" hidden>
-              <p><strong>How many sets of windows are at the back/side of your house? - Do not include Conservatory</strong></p>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="No need to clean, only clean fronts" data-back-side-window-option data-extra="0">No need to clean, only clean fronts</label>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="1 - 2 sets of windows" data-back-side-window-option data-extra="6">1 - 2 sets of windows</label>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="3 - 4 sets of windows" data-back-side-window-option data-extra="8">3 - 4 sets of windows</label>
-              <label class="checkbox-option"><input type="checkbox" name="Back or side window sets" value="5 - 6 sets of windows" data-back-side-window-option data-extra="10">5 - 6 sets of windows</label>
-            </div>
-            <div id="extra-options" class="conditional-options" hidden>
-              <p><strong>Extras?</strong></p>
-              <label class="checkbox-option"><input type="checkbox" name="Extras" value="Small Conservatory" data-extra-option data-extra="6">Small Conservatory - £6</label>
-              <label class="checkbox-option"><input type="checkbox" name="Extras" value="Large Conservatory" data-extra-option data-extra="10">Large Conservatory - £10</label>
+            <div class="quote-builder-layout">
+              <div class="price-builder-panel">
+                <p class="price-builder-intro">Roughly how many window sets do you have? Use the plus and minus buttons. It does not need to be exact.</p>
+                <div class="quote-total" id="quote-total" hidden aria-live="polite">
+                  <span>Estimated price</span>
+                  <strong id="quote-total-price">£-</strong>
+                  <small id="quote-total-monthly">Add front window sets to see your estimate.</small>
+                </div>
+                <div class="counter-list" aria-label="Window set estimator">
+                  <div class="counter-card" data-counter-card="front">
+                    <div>
+                      <strong>Front window sets</strong>
+                      <span>Groups of windows at the front of your home.</span>
+                    </div>
+                    <div class="counter-control">
+                      <button type="button" data-counter-action="decrease" data-counter-target="front" aria-label="Reduce front window sets">-</button>
+                      <output id="front-window-count" aria-live="polite">0</output>
+                      <button type="button" data-counter-action="increase" data-counter-target="front" aria-label="Add front window sets">+</button>
+                    </div>
+                  </div>
+                  <div class="counter-card" data-counter-card="back">
+                    <div>
+                      <strong>Back or side window sets</strong>
+                      <span>Leave at 0 if you only need the fronts cleaned.</span>
+                    </div>
+                    <div class="counter-control">
+                      <button type="button" data-counter-action="decrease" data-counter-target="back" aria-label="Reduce back or side window sets">-</button>
+                      <output id="back-window-count" aria-live="polite">0</output>
+                      <button type="button" data-counter-action="increase" data-counter-target="back" aria-label="Add back or side window sets">+</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="extra-choice" aria-label="Extras">
+                  <p><strong>Extras?</strong></p>
+                  <div class="addon-options">
+                    <button type="button" data-extra-button data-extra-value="Small Conservatory" data-extra-price="6">Small conservatory <span>+£6</span></button>
+                    <button type="button" data-extra-button data-extra-value="Large Conservatory" data-extra-price="10">Large conservatory <span>+£10</span></button>
+                  </div>
+                </div>
+              </div>
+              <div class="window-set-preview" aria-live="polite">
+                <div class="preview-house" aria-hidden="true">
+                  <div class="preview-roof"></div>
+                  <div class="preview-wall">
+                    <div class="preview-grid" id="window-preview-grid"></div>
+                    <div class="preview-door"></div>
+                  </div>
+                </div>
+                <p id="window-preview-caption">Add window sets to see the preview.</p>
+              </div>
             </div>
           </fieldset>
           <div class="form-actions wide" id="quote-next-step">
             <button class="button primary" id="quote-next-button" type="button" disabled>Next step</button>
-            <p id="quote-next-hint">Choose a front window option to continue.</p>
+            <p id="quote-next-hint">Add front window sets to continue.</p>
           </div>
           <div class="quote-details wide" id="quote-details" hidden>
             <label>Name<input name="Name" type="text" autocomplete="name" placeholder="Your name" required></label>
@@ -255,6 +287,6 @@
       <p>&copy; <span id="year">2026</span> B D Window Cleaning Services. Window cleaning made simple in the Southampton area.</p>
       <a href="#top">Back to top</a>
     </footer>
-    <script src="script.js?v=20260727-11"></script>
+    <script src="script.js?v=20260728-1"></script>
   </body>
 </html>
