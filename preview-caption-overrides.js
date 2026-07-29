@@ -1,3 +1,20 @@
+const desktopCounterLabelStyle = document.createElement("style");
+desktopCounterLabelStyle.textContent = `
+  @media (min-width: 641px) {
+    .counter-control {
+      grid-template-columns: 42px minmax(96px, auto) 42px;
+    }
+
+    .counter-control output {
+      padding: 0 10px;
+      font-size: 1.05rem;
+      line-height: 1.1;
+      white-space: nowrap;
+    }
+  }
+`;
+document.head.append(desktopCounterLabelStyle);
+
 const frontPreviewCaptionText = {
   "1 to 2": "Front example: 2 window sets.",
   "3 to 4": "Front example: 4 window sets.",
