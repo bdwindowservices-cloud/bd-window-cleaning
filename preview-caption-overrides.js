@@ -11,6 +11,11 @@ desktopCounterLabelStyle.textContent = `
       line-height: 1.1;
       white-space: nowrap;
     }
+
+    .window-set-preview {
+      align-content: center;
+      padding-top: 34px;
+    }
   }
 `;
 document.head.append(desktopCounterLabelStyle);
