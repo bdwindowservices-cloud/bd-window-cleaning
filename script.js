@@ -57,7 +57,8 @@ const quoteState = {
   backIndex: 0,
   frontOnly: false,
   extra: "",
-  extraPrice: 0
+  extraPrice: 0,
+  priceChanged: false
 };
 const formatCleaningDate = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
@@ -85,6 +86,10 @@ const getFrontOption = () => frontOptions[quoteState.frontIndex];
 const getBackOption = () => backOptions[quoteState.backIndex];
 
 const hasCompleteQuoteSelection = () => Boolean(getFrontOption());
+
+const markPriceChanged = () => {
+  quoteState.priceChanged = true;
+};
 
 const getCheckedOption = (options) => Array.from(options).find((option) => option.checked);
 
@@ -206,6 +211,11 @@ const updateMobileQuoteAmount = (price, monthly) => {
     return;
   }
 
+  if (!quoteState.priceChanged) {
+    resetMobileQuoteAmount();
+    return;
+  }
+
   if (!monthly) {
     mobileQuoteAmount.innerHTML = `<span>${price}</span><small>We will confirm the price</small>`;
   } else {
@@ -243,11 +253,13 @@ const resetDesktopEstimateAmount = () => {
 };
 
 const updateDesktopEstimateAmount = (price, monthly) => {
+  const hasChangedPrice = quoteState.priceChanged;
+
   setDesktopEstimateState(
-    monthly ? `${price} per clean` : price,
-    monthly ? `${monthly} per month` : "We will confirm the price",
-    "Book clean",
-    "ready"
+    hasChangedPrice ? (monthly ? `${price} per clean` : price) : desktopEstimateDefaultMain,
+    hasChangedPrice ? (monthly ? `${monthly} per month` : "We will confirm the price") : desktopEstimateDefaultSub,
+    hasChangedPrice ? "Book clean" : "See prices",
+    hasChangedPrice ? "ready" : "idle"
   );
 };
 
@@ -482,7 +494,7 @@ const openQuoteDetails = () => {
 };
 
 const handleFloatingEstimateAction = (event) => {
-  if (!hasCompleteQuoteSelection()) {
+  if (!hasCompleteQuoteSelection() || !quoteState.priceChanged) {
     return;
   }
 
@@ -502,6 +514,8 @@ counterButtons.forEach((button) => {
     const action = button.dataset.counterAction;
     const direction = action === "increase" ? 1 : -1;
 
+    markPriceChanged();
+
     if (target === "front") {
       quoteState.frontIndex = Math.min(frontOptions.length - 1, Math.max(0, quoteState.frontIndex + direction));
     }
@@ -516,6 +530,7 @@ counterButtons.forEach((button) => {
 
 if (frontOnlyClean) {
   frontOnlyClean.addEventListener("change", () => {
+    markPriceChanged();
     quoteState.frontOnly = frontOnlyClean.checked;
     if (quoteState.frontOnly) {
       quoteState.backIndex = 0;
@@ -529,6 +544,7 @@ extraButtons.forEach((button) => {
   button.addEventListener("click", () => {
     const value = button.dataset.extraValue;
     const isSelected = quoteState.extra === value;
+    markPriceChanged();
     quoteState.extra = isSelected ? "" : value;
     quoteState.extraPrice = isSelected ? 0 : Number(button.dataset.extraPrice || 0);
     updateExtraButtons();
