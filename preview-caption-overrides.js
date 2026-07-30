@@ -27,7 +27,8 @@ document.head.append(desktopCounterLabelStyle);
 const frontPreviewCaptionText = {
   "1 to 2": "Front example: 2 window sets.",
   "3 to 4": "Front example: 4 window sets.",
-  "5 to 6": "Front example: 5 window sets."
+  "5 to 6": "Front example: 5 window sets.",
+  "7 to 8": "Front example: 7 window sets."
 };
 
 const updateFrontPreviewCaptionText = () => {
