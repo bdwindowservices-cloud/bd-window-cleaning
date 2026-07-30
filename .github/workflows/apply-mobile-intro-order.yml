@@ -1,0 +1,58 @@
+name: Apply mobile intro order
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-mobile-intro-order.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update mobile quote layout
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text()
+
+          old_css = """      @media (max-width: 640px) {
+        .brand { gap: 14px; }
+"""
+          new_css = """      .mobile-price-builder-intro { display: none; }
+      @media (max-width: 640px) {
+        .brand { gap: 14px; }
+        .price-builder-panel > .price-builder-intro { display: none; }
+        .mobile-price-builder-intro { display: block; }
+"""
+          if old_css not in text:
+              raise SystemExit('Could not find the mobile CSS insertion point')
+          text = text.replace(old_css, new_css, 1)
+
+          old_preview = """              <div class=\"window-set-preview\" aria-live=\"polite\">
+                <div class=\"preview-house\" aria-hidden=\"true\">
+"""
+          new_preview = """              <div class=\"window-set-preview\" aria-live=\"polite\">
+                <p class=\"price-builder-intro mobile-price-builder-intro\">Roughly how many window sets do you have? Use the plus and minus buttons. It does not need to be exact.</p>
+                <div class=\"preview-house\" aria-hidden=\"true\">
+"""
+          if old_preview not in text:
+              raise SystemExit('Could not find the preview insertion point')
+          text = text.replace(old_preview, new_preview, 1)
+
+          path.write_text(text)
+          PY
+          rm .github/workflows/apply-mobile-intro-order.yml
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/apply-mobile-intro-order.yml
+          git commit -m "Move quote instructions above preview on mobile"
+          git push
