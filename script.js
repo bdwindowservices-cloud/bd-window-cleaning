@@ -53,7 +53,7 @@ const backOptions = [
   { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 10 }
 ];
 const quoteState = {
-  frontIndex: 0,
+  frontIndex: 1,
   backIndex: 0,
   frontOnly: false,
   extra: "",
