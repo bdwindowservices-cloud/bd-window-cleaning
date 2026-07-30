@@ -11,6 +11,17 @@
       .brand { gap: 20px; }
       .brand-name { max-width: 320px; }
       .desktop-action-bar { display: none; }
+      .quote-section {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+      }
+      .quote-intro {
+        position: static;
+      }
+      .quote-form {
+        justify-self: start;
+        width: min(1180px, 100%);
+      }
       .front-only-option {
         display: flex;
         align-items: center;
@@ -232,8 +243,6 @@
 
       <section class="section quote-section" id="quote" aria-labelledby="quote-title">
         <div class="quote-intro">
-          <p class="section-kicker">Get Your Clean Booked Quickly</p>
-          <p>Cleans every 6-7 weeks</p>
           <div class="confirmation" id="quote-status" hidden tabindex="-1">
             <strong>Thank you. Your quote request has been sent successfully.</strong>
             <span>We will contact you using your preferred contact method. For anything urgent, email bdwindowservices@gmail.com.</span>
