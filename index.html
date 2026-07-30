@@ -20,7 +20,8 @@
       }
       .quote-form {
         justify-self: start;
-        width: min(1180px, 100%);
+        width: min(1120px, calc(100% - clamp(24px, 4vw, 72px)));
+        margin-left: clamp(24px, 4vw, 72px);
       }
       .front-only-option {
         display: flex;
@@ -181,6 +182,10 @@
       }
       @media (max-width: 640px) {
         .brand { gap: 14px; }
+        .quote-form {
+          width: 100%;
+          margin-left: 0;
+        }
         .preview-house, .house-preview-photo, .house-preview-bespoke { min-height: 264px; }
         .preview-wall { min-height: 204px; padding: 20px 16px 36px; }
         .preview-grid { width: min(100%, 220px); gap: 10px; }
