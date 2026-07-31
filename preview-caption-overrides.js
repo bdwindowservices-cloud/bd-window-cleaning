@@ -43,6 +43,24 @@
         text-align: left;
       }
 
+      .counter-control {
+        grid-template-columns: 36px minmax(78px, auto) 36px;
+      }
+
+      .counter-control button {
+        width: 36px;
+        min-width: 36px;
+        height: 36px;
+        min-height: 36px;
+        padding: 0;
+      }
+
+      .counter-control output {
+        min-height: 36px;
+        padding: 5px 8px;
+        line-height: 1.05;
+      }
+
       .mobile-action-bar {
         opacity: 0;
         pointer-events: none;
