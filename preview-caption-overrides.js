@@ -42,6 +42,19 @@
         margin: 0 0 12px;
         text-align: left;
       }
+
+      .mobile-action-bar {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(calc(100% + 24px));
+        transition: opacity 180ms ease, transform 220ms ease;
+      }
+
+      .mobile-action-bar.mobile-banner-visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
     }
   `;
   document.head.append(style);
@@ -70,9 +83,48 @@
     }
   };
 
+  const initialiseMobileBanner = () => {
+    const banner = document.querySelector(".mobile-action-bar");
+    const quoteSection = document.querySelector("#quote");
+
+    if (!banner || !quoteSection) return;
+
+    let hasBeenRevealed = false;
+
+    const revealBanner = () => {
+      if (hasBeenRevealed) return;
+      hasBeenRevealed = true;
+      banner.classList.add("mobile-banner-visible");
+    };
+
+    const checkPosition = () => {
+      if (window.innerWidth > 640 || hasBeenRevealed) return;
+      const quoteTop = quoteSection.getBoundingClientRect().top;
+      if (quoteTop <= window.innerHeight) revealBanner();
+    };
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            revealBanner();
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.01 }
+      );
+      observer.observe(quoteSection);
+    }
+
+    window.addEventListener("scroll", checkPosition, { passive: true });
+    window.addEventListener("resize", checkPosition);
+    checkPosition();
+  };
+
   const initialise = () => {
     addMobileIntro();
     updateCaption();
+    initialiseMobileBanner();
 
     document
       .querySelectorAll('[data-counter-action][data-counter-target="front"]')
