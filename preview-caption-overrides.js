@@ -106,9 +106,21 @@
     }
   };
 
+  const updateMobileBannerPrice = () => {
+    if (window.innerWidth > 640) return;
+
+    const bannerLink = document.querySelector("#mobile-quote-amount");
+    const price = document.querySelector("#quote-total-price");
+    if (!bannerLink || !price) return;
+
+    const currentPrice = price.textContent.trim() || "£-";
+    bannerLink.textContent = `Current price: ${currentPrice}`;
+  };
+
   const initialiseMobileBanner = () => {
     const banner = document.querySelector(".mobile-action-bar");
     const quoteSection = document.querySelector("#quote");
+    const price = document.querySelector("#quote-total-price");
 
     if (!banner || !quoteSection) return;
 
@@ -117,6 +129,7 @@
     const revealBanner = () => {
       if (hasBeenRevealed) return;
       hasBeenRevealed = true;
+      updateMobileBannerPrice();
       banner.classList.add("mobile-banner-visible");
     };
 
@@ -125,6 +138,15 @@
       const quoteTop = quoteSection.getBoundingClientRect().top;
       if (quoteTop <= window.innerHeight) revealBanner();
     };
+
+    if (price && "MutationObserver" in window) {
+      const priceObserver = new MutationObserver(updateMobileBannerPrice);
+      priceObserver.observe(price, {
+        childList: true,
+        characterData: true,
+        subtree: true
+      });
+    }
 
     if ("IntersectionObserver" in window) {
       const observer = new IntersectionObserver(
@@ -140,7 +162,10 @@
     }
 
     window.addEventListener("scroll", checkPosition, { passive: true });
-    window.addEventListener("resize", checkPosition);
+    window.addEventListener("resize", () => {
+      checkPosition();
+      if (hasBeenRevealed) updateMobileBannerPrice();
+    });
     checkPosition();
   };
 
@@ -151,9 +176,14 @@
     initialiseMobileBanner();
 
     document
-      .querySelectorAll('[data-counter-action][data-counter-target="front"]')
-      .forEach((button) => {
-        button.addEventListener("click", () => window.setTimeout(updateCaption, 0));
+      .querySelectorAll('[data-counter-action], [data-extra-button], #front-only-clean')
+      .forEach((control) => {
+        control.addEventListener("click", () => {
+          window.setTimeout(() => {
+            updateCaption();
+            updateMobileBannerPrice();
+          }, 0);
+        });
       });
   };
 
