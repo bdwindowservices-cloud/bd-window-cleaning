@@ -1,0 +1,84 @@
+name: Fix mobile quote order
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-mobile-quote-order.yml'
+      - '.github/mobile-order-trigger.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update mobile quote layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text()
+
+          old_intro = '<p class="price-builder-intro">Roughly how many window sets do you have? Use the plus and minus buttons. It does not need to be exact.</p>'
+          mobile_intro = '<p class="price-builder-intro mobile-price-builder-intro">Roughly how many window sets do you have? Use the plus and minus buttons. It does not need to be exact.</p>'
+
+          if 'mobile-price-builder-intro' not in text:
+              target = '<div class="window-set-preview" aria-live="polite">\n                <div class="preview-house" aria-hidden="true">'
+              replacement = '<div class="window-set-preview" aria-live="polite">\n                ' + mobile_intro + '\n                <div class="preview-house" aria-hidden="true">'
+              if target not in text:
+                  raise SystemExit('Preview target not found')
+              text = text.replace(target, replacement, 1)
+
+          css_old = '''      @media (max-width: 640px) {
+        .brand { gap: 14px; }
+        .quote-form {
+          width: 100%;
+          margin-left: 0;
+        }
+        .preview-house, .house-preview-photo, .house-preview-bespoke { min-height: 264px; }
+        .preview-wall { min-height: 204px; padding: 20px 16px 36px; }
+        .preview-grid { width: min(100%, 220px); gap: 10px; }
+      }'''
+
+          css_new = '''      .mobile-price-builder-intro { display: none; }
+      @media (max-width: 640px) {
+        .brand { gap: 14px; }
+        .quote-form {
+          width: 100%;
+          margin-left: 0;
+        }
+        .price-builder-panel > .price-builder-intro { display: none; }
+        .mobile-price-builder-intro {
+          display: block;
+          width: 100%;
+          margin: 0 0 12px;
+          text-align: left;
+        }
+        .preview-house, .house-preview-photo, .house-preview-bespoke { min-height: 264px; }
+        .preview-wall { min-height: 204px; padding: 20px 16px 36px; }
+        .preview-grid { width: min(100%, 220px); gap: 10px; }
+      }'''
+
+          if '.mobile-price-builder-intro { display: none; }' not in text:
+              if css_old not in text:
+                  raise SystemExit('Mobile CSS target not found')
+              text = text.replace(css_old, css_new, 1)
+
+          text = text.replace('preview-caption-overrides.js?v=20260729-1', 'preview-caption-overrides.js?v=20260731-1')
+          path.write_text(text)
+          PY
+      - name: Commit update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Fix mobile quote instruction order"
+            git push
+          fi
