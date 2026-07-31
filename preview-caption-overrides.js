@@ -68,6 +68,11 @@
     if (captionText) caption.textContent = captionText;
   };
 
+  const updateFrontInstruction = () => {
+    const instruction = document.querySelector('[data-counter-card="front"] span');
+    if (instruction) instruction.textContent = "Choose the best match";
+  };
+
   const addMobileIntro = () => {
     const originalIntro = document.querySelector(".price-builder-panel > .price-builder-intro");
     const preview = document.querySelector(".window-set-preview");
@@ -124,6 +129,7 @@
   const initialise = () => {
     addMobileIntro();
     updateCaption();
+    updateFrontInstruction();
     initialiseMobileBanner();
 
     document
