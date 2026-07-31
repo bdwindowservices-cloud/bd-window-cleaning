@@ -21,6 +21,15 @@ desktopCounterLabelStyle.textContent = `
       padding-top: 34px;
     }
   }
+
+  @media (max-width: 640px) {
+    .window-set-preview > .price-builder-intro {
+      width: 100%;
+      max-width: none;
+      margin: 0 0 12px;
+      text-align: left;
+    }
+  }
 `;
 document.head.append(desktopCounterLabelStyle);
 
@@ -44,11 +53,34 @@ const updateFrontPreviewCaptionText = () => {
   }
 };
 
+const arrangeQuoteBuilderForScreen = () => {
+  const panel = document.querySelector(".price-builder-panel");
+  const preview = document.querySelector(".window-set-preview");
+  const intro = document.querySelector(".price-builder-intro");
+  const previewHouse = preview ? preview.querySelector(".preview-house") : null;
+  const quoteTotal = panel ? panel.querySelector(".quote-total") : null;
+
+  if (!panel || !preview || !intro || !previewHouse) {
+    return;
+  }
+
+  if (window.matchMedia("(max-width: 640px)").matches) {
+    preview.insertBefore(intro, previewHouse);
+  } else if (quoteTotal) {
+    panel.insertBefore(intro, quoteTotal);
+  } else {
+    panel.prepend(intro);
+  }
+};
+
 document.querySelectorAll('[data-counter-action][data-counter-target="front"]').forEach((button) => {
   button.addEventListener("click", () => window.setTimeout(updateFrontPreviewCaptionText, 1));
 });
 
+window.addEventListener("resize", arrangeQuoteBuilderForScreen);
+
 if (typeof updateHousePhotoPreview === "function") {
   updateHousePhotoPreview();
 }
+arrangeQuoteBuilderForScreen();
 updateFrontPreviewCaptionText();
