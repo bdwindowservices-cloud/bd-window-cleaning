@@ -43,6 +43,10 @@
         text-align: left;
       }
 
+      .quote-total {
+        display: none !important;
+      }
+
       .counter-control {
         grid-template-columns: 36px minmax(78px, auto) 36px;
       }
