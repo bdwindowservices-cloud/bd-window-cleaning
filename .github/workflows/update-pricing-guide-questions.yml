@@ -45,3 +45,5 @@ jobs:
           git add index.html
           git commit -m "Update pricing guide questions and answers"
           git push
+
+# Triggered after creation.
