@@ -39,6 +39,11 @@
         align-content: center;
         padding-top: 34px;
       }
+
+      .desktop-action-bar.is-ready #desktop-estimate-main {
+        font-size: 0.82rem;
+        line-height: 1.25;
+      }
     }
 
     .mobile-price-builder-intro {
