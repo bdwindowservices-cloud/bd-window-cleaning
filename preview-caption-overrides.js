@@ -130,7 +130,10 @@
   };
 
   const parseMoney = (text) => {
-    const value = Number(String(text).replace(/[^0-9.]/g, ""));
+    const match = String(text).match(/£\s*(\d+(?:\.\d{1,2})?)/);
+    if (!match) return null;
+
+    const value = Number(match[1]);
     return Number.isFinite(value) ? value : null;
   };
 
