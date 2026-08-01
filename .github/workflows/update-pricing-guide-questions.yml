@@ -1,0 +1,47 @@
+name: Update pricing guide questions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-pricing-guide-questions.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-pricing-guide:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace pricing guide questions and answers
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text()
+          old = '''        <div class="faq-list">
+          <article><h3>What is a window set?</h3><p>A window set is one grouped window unit or frame. Count the whole group as one set, not each individual pane of glass.</p></article>
+          <article><h3>Front window sets</h3><p>Count the grouped window units on the front of your home and choose the closest range.</p></article>
+          <article><h3>Back or side window sets</h3><p>Count the grouped window units at the back and sides. Do not include a conservatory here—add it separately under Extras.</p></article>
+          <article><h3>Not sure?</h3><p>Choose the closest match. Your estimate does not need to be exact and the final price will be confirmed before cleaning begins.</p></article>
+        </div>'''
+          new = '''        <div class="faq-list">
+          <article><h3>What counts as a window set?</h3><p>A window set is a group of panes contained within one window frame. Count the whole frame as one set, not every individual pane of glass.</p></article>
+          <article><h3>Can you only clean my front windows?</h3><p>Yes. Set the back or side window count to 0 and choose the closest range for your front windows.</p></article>
+          <article><h3>Is my conservatory small or large?</h3><p>A small conservatory is usually a compact lean-to or single-room conservatory with fewer glass panels. Choose large for a wider, wraparound or heavily glazed conservatory. Pick the closest match if you are unsure.</p></article>
+          <article><h3>How should I count my porch?</h3><p>Count each separate group of porch windows as one window set. Do not count each individual pane separately.</p></article>
+          <article><h3>What about doors with glass?</h3><p>A standard front or back door with a small glass panel does not need to be counted. Count French doors, patio doors or large fully glazed doors as one window set.</p></article>
+        </div>'''
+          if old not in text:
+              raise SystemExit('Expected pricing guide list was not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - name: Commit pricing guide update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Update pricing guide questions and answers"
+          git push
