@@ -1,4 +1,4 @@
-name: Update recurring price wording
+name: Add comma to recurring price line
 
 on:
   push:
@@ -14,129 +14,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update banner and estimate wording
+      - name: Add comma to desktop banner price
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
-          def replace_once(text, old, new, label):
-              if old not in text:
-                  raise SystemExit(f'Expected text not found: {label}')
-              return text.replace(old, new, 1)
-
           script_path = Path('script.js')
           text = script_path.read_text()
-
-          text = replace_once(
-              text,
-              'mobileQuoteAmount.innerHTML = `<span>${price} per clean</span><small>${monthly} per month</small>`;',
-              'mobileQuoteAmount.innerHTML = `<span>${price} per clean,</span><small>every 6–7 weeks<br>Paid as ${monthly}/month</small>`;',
-              'mobile recurring banner'
-          )
-
-          text = replace_once(
-              text,
-              'desktopEstimateSub.textContent = sub;',
-              'desktopEstimateSub.innerHTML = sub;',
-              'desktop subtitle HTML'
-          )
-
-          text = replace_once(
-              text,
-              'hasChangedPrice ? (monthly ? `${monthly} per month` : "We will confirm the price") : desktopEstimateDefaultSub,',
-              'hasChangedPrice ? (monthly ? `every 6–7 weeks<br>Paid as ${monthly}/month` : "We will confirm the price") : desktopEstimateDefaultSub,',
-              'desktop recurring subtitle'
-          )
-
-          text = replace_once(
-              text,
-              'const monthly = quoteTotalMonthly ? quoteTotalMonthly.textContent : "";',
-              'const monthly = quoteTotalMonthly ? quoteTotalMonthly.innerHTML : "";',
-              'booking prompt monthly HTML'
-          )
-
-          text = replace_once(
-              text,
-              'desktopEstimateMain.textContent = `${price}${isBespoke ? "" : " per clean"} - Choose a cleaning date`;',
-              'desktopEstimateMain.textContent = `${price} - Choose a cleaning date`;',
-              'booking prompt main text'
-          )
-
-          text = replace_once(
-              text,
-              'desktopEstimateSub.textContent = monthly;',
-              'desktopEstimateSub.innerHTML = monthly;',
-              'booking prompt subtitle HTML'
-          )
-
-          text = replace_once(
-              text,
-              'mobileQuoteAmount.innerHTML = `<span>${price}${isBespoke ? "" : " per clean"} - Choose a cleaning date</span><small>${monthly}</small>`;',
-              'mobileQuoteAmount.innerHTML = `<span>${price} - Choose a cleaning date</span><small>${monthly}</small>`;',
-              'mobile booking prompt'
-          )
-
-          text = replace_once(
-              text,
-              'quoteTotalPrice.textContent = price;',
-              'quoteTotalPrice.textContent = `${price} per clean,`;',
-              'estimated price first line'
-          )
-
-          text = replace_once(
-              text,
-              'quoteTotalMonthly.textContent = `${monthly} per month`;',
-              'quoteTotalMonthly.innerHTML = `every 6–7 weeks<br>Paid as ${monthly}/month`;',
-              'estimated price frequency and payment lines'
-          )
-
-          text = replace_once(
-              text,
-              'estimatedQuoteInput.value = `${price} (${monthly} per month)`;',
-              'estimatedQuoteInput.value = `${price} per clean, every 6–7 weeks, paid as ${monthly}/month`;',
-              'submitted estimate wording'
-          )
-
-          script_path.write_text(text)
-
-          override_path = Path('preview-caption-overrides.js')
-          override = override_path.read_text()
-          override = replace_once(
-              override,
-              'const monthlyText = monthly.textContent.trim();',
-              'const monthlyText = monthly.textContent.trim();\n    const monthlyHtml = monthly.innerHTML.trim();',
-              'mobile existing price HTML value'
-          )
-          override = replace_once(
-              override,
-              'bannerLink.innerHTML = `<span>${priceText} per clean</span><small>${monthlyText}</small>`;',
-              'bannerLink.innerHTML = `<span>${priceText}</span><small>${monthlyHtml}</small>`;',
-              'mobile existing recurring banner'
-          )
-          override_path.write_text(override)
+          old = 'hasChangedPrice ? (monthly ? `${price} per clean` : price) : desktopEstimateDefaultMain,'
+          new = 'hasChangedPrice ? (monthly ? `${price} per clean,` : price) : desktopEstimateDefaultMain,'
+          if old not in text:
+              raise SystemExit('Expected desktop recurring price line was not found')
+          script_path.write_text(text.replace(old, new, 1))
 
           index_path = Path('index.html')
           index = index_path.read_text()
-          index = replace_once(
-              index,
-              'script.js?v=20260730-2',
-              'script.js?v=20260801-3',
-              'script cache version'
-          )
-          index = replace_once(
-              index,
-              'preview-caption-overrides.js?v=20260729-1',
-              'preview-caption-overrides.js?v=20260801-3',
-              'override cache version'
-          )
-          index_path.write_text(index)
+          old_version = 'script.js?v=20260801-3'
+          new_version = 'script.js?v=20260801-4'
+          if old_version not in index:
+              raise SystemExit('Expected script cache version was not found')
+          index_path.write_text(index.replace(old_version, new_version, 1))
           PY
-      - name: Commit wording update
+      - name: Commit punctuation update
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add script.js preview-caption-overrides.js index.html
-          git commit -m "Show cleaning frequency and monthly payment in prices"
+          git add script.js index.html
+          git commit -m "Match recurring price line wording"
           git push
-
-# Triggered after creation.
