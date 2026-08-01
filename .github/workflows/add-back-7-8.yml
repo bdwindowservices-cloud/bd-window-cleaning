@@ -1,0 +1,47 @@
+name: Add back 7 to 8 pricing
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-back-7-8.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-pricing:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add 7 to 8 back-window option
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('script.js')
+          text = path.read_text()
+          old = '''const backOptions = [
+  { label: "0", emailLabel: "No back or side sets selected", previewSets: 0, price: 0 },
+  { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 5 },
+  { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 4, price: 8 },
+  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 11 }
+];'''
+          new = '''const backOptions = [
+  { label: "0", emailLabel: "No back or side sets selected", previewSets: 0, price: 0 },
+  { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 5 },
+  { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 4, price: 8 },
+  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 11 },
+  { label: "7 to 8", emailLabel: "7 to 8 sets", previewSets: 8, price: 14 }
+];'''
+          if old not in text:
+              raise SystemExit('Expected backOptions block was not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - name: Commit pricing change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add script.js
+          git commit -m "Add 7 to 8 back-window pricing option"
+          git push
