@@ -23,6 +23,9 @@
         width: min(1120px, calc(100% - clamp(24px, 4vw, 72px)));
         margin-left: clamp(24px, 4vw, 72px);
       }
+      #pricing-guide {
+        scroll-margin-top: 96px;
+      }
       .front-only-option {
         display: flex;
         align-items: center;
@@ -135,6 +138,11 @@
       .preview-window-set::before { width: 3px; background: rgba(247,251,251,0.88); }
       .preview-window-set::after { height: 3px; background: rgba(247,251,251,0.88); }
       .preview-door { display: none; }
+      @media (max-width: 900px) {
+        #pricing-guide {
+          scroll-margin-top: 132px;
+        }
+      }
       @media (min-width: 641px) {
         body { padding-bottom: 96px; }
         .desktop-action-bar {
@@ -274,7 +282,7 @@
             <legend>Tap for a price!</legend>
             <div class="quote-builder-layout">
               <div class="price-builder-panel">
-                <p class="price-builder-intro">Roughly how many window sets do you have? Use the plus and minus buttons. It does not need to be exact.</p>
+                <p class="price-builder-intro">Roughly how many window sets do you have? <a href="#pricing-guide">See pricing guide for help</a>. It does not need to be exact.</p>
                 <div class="quote-total" id="quote-total" hidden aria-live="polite">
                   <span>Estimated price</span>
                   <strong id="quote-total-price">£-</strong>
@@ -380,6 +388,20 @@
           <article><h3>Do I need to be home?</h3><p>Not always. If access is agreed in advance, we can discuss whether the clean can be done while you are out.</p></article>
           <article><h3>How do I pay?</h3><p>We only take payment after you are happy with your estimate and we have finished your first clean. We take card payments, BACS transfers and standing orders.</p></article>
           <article><h3>What if the weather is bad?</h3><p>We work in light rain, as this does not affect the results of pure-water cleaning. In heavy or unsuitable weather, we’ll rearrange your clean.</p></article>
+        </div>
+      </section>
+
+      <section class="section faq" id="pricing-guide" aria-labelledby="pricing-guide-title">
+        <div class="section-heading">
+          <p class="section-kicker">Pricing help</p>
+          <h2 id="pricing-guide-title">Pricing Guide</h2>
+          <p>Use the guide below to choose the closest options for your home. It does not need to be exact.</p>
+        </div>
+        <div class="faq-list">
+          <article><h3>What is a window set?</h3><p>A window set is one grouped window unit or frame. Count the whole group as one set, not each individual pane of glass.</p></article>
+          <article><h3>Front window sets</h3><p>Count the grouped window units on the front of your home and choose the closest range.</p></article>
+          <article><h3>Back or side window sets</h3><p>Count the grouped window units at the back and sides. Do not include a conservatory here—add it separately under Extras.</p></article>
+          <article><h3>Not sure?</h3><p>Choose the closest match. Your estimate does not need to be exact and the final price will be confirmed before cleaning begins.</p></article>
         </div>
       </section>
 
