@@ -41,7 +41,12 @@
       }
 
       .desktop-action-bar.is-ready #desktop-estimate-main {
-        font-size: 0.82rem;
+        font-size: 1.05rem !important;
+        line-height: 1.25;
+      }
+
+      .quote-total #quote-total-price {
+        font-size: 1.25rem !important;
         line-height: 1.25;
       }
     }
