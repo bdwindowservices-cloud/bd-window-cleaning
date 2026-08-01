@@ -17,8 +17,11 @@
     "0": 0,
     "1 to 2": 5,
     "3 to 4": 8,
-    "5 to 6": 11
+    "5 to 6": 11,
+    "7 to 8": 14
   };
+
+  let customBackSevenToEight = false;
 
   const formatMoney = (value) => Number.isInteger(value) ? `£${value}` : `£${value.toFixed(2)}`;
 
@@ -152,8 +155,14 @@
     const totalPriceElement = document.querySelector("#quote-total-price");
     const monthlyElement = document.querySelector("#quote-total-monthly");
     const estimatedInput = document.querySelector("#estimated-quote");
+    const backInput = document.querySelector("#back-side-window-sets-input");
 
     if (!frontOutput || !backOutput || !totalPriceElement || !monthlyElement) return;
+
+    if (customBackSevenToEight && !frontOnly?.checked) {
+      backOutput.textContent = "7 to 8";
+      if (backInput) backInput.value = "Back or side: 7 to 8 sets";
+    }
 
     const frontLabel = frontOutput.textContent.trim();
     if (frontLabel === "9+ bespoke") return;
@@ -181,6 +190,53 @@
     if (desktopSub && desktopSub.textContent) desktopSub.textContent = monthlyText;
 
     showExistingMobilePrice();
+  };
+
+  const syncBackButtons = () => {
+    const increase = document.querySelector('[data-counter-action="increase"][data-counter-target="back"]');
+    const decrease = document.querySelector('[data-counter-action="decrease"][data-counter-target="back"]');
+    const output = document.querySelector("#back-window-count");
+    const frontOnly = document.querySelector("#front-only-clean");
+
+    if (!increase || !decrease || !output || frontOnly?.checked) return;
+
+    if (customBackSevenToEight) {
+      output.textContent = "7 to 8";
+      increase.disabled = true;
+      decrease.disabled = false;
+    } else if (output.textContent.trim() === "5 to 6") {
+      increase.disabled = false;
+    }
+  };
+
+  const initialiseBackSevenToEight = () => {
+    const increase = document.querySelector('[data-counter-action="increase"][data-counter-target="back"]');
+    const decrease = document.querySelector('[data-counter-action="decrease"][data-counter-target="back"]');
+    const output = document.querySelector("#back-window-count");
+
+    if (!increase || !decrease || !output) return;
+
+    increase.addEventListener("click", (event) => {
+      if (output.textContent.trim() !== "5 to 6" || customBackSevenToEight) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      customBackSevenToEight = true;
+      output.textContent = "7 to 8";
+      syncBackButtons();
+      applyUpdatedPricing();
+    }, true);
+
+    decrease.addEventListener("click", (event) => {
+      if (!customBackSevenToEight) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      customBackSevenToEight = false;
+      output.textContent = "5 to 6";
+      syncBackButtons();
+      applyUpdatedPricing();
+    }, true);
+
+    syncBackButtons();
   };
 
   const initialiseMobileBanner = () => {
@@ -227,6 +283,7 @@
     updateCaption();
     updateFrontInstruction();
     initialiseMobileBanner();
+    initialiseBackSevenToEight();
     applyUpdatedPricing();
 
     document
@@ -235,6 +292,7 @@
         control.addEventListener("click", () => {
           window.setTimeout(() => {
             updateCaption();
+            syncBackButtons();
             applyUpdatedPricing();
           }, 0);
         });
