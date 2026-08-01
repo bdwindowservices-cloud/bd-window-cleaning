@@ -239,7 +239,7 @@
 
     updateOneOffFormField(true);
 
-    if (currentPriceText.toLowerCase().includes("single clean")) {
+    if (currentPriceText.toLowerCase().includes("one-off clean")) {
       monthly.hidden = true;
       monthly.textContent = "";
       return;
@@ -247,11 +247,11 @@
 
     const bespoke = currentPriceText.toLowerCase().includes("bespoke");
     if (bespoke) {
-      const displayText = "Bespoke single clean";
+      const displayText = "Bespoke One-off Clean";
       price.textContent = displayText;
       monthly.hidden = true;
       monthly.textContent = "";
-      if (estimated) estimated.value = "Bespoke single clean (one-off clean selected)";
+      if (estimated) estimated.value = "Bespoke One-off Clean (one-off clean selected)";
       updateOneOffActionBars(displayText, true);
       return;
     }
@@ -260,12 +260,12 @@
     if (basePrice === null) return;
 
     const singlePrice = formatMoney(basePrice + oneOffSurcharge);
-    const displayText = `${singlePrice} single clean`;
+    const displayText = `${singlePrice} One-off Clean`;
     price.textContent = displayText;
     monthly.hidden = true;
     monthly.textContent = "";
     if (estimated) {
-      estimated.value = `${singlePrice} single clean (includes £5 one-off clean charge)`;
+      estimated.value = `${singlePrice} One-off Clean (includes £5 one-off clean charge)`;
     }
     updateOneOffActionBars(displayText, false);
   };
@@ -393,7 +393,7 @@
     const monthlyText = monthly.textContent.trim();
     if (!priceText || priceText === "£-") return;
 
-    if (priceText.toLowerCase().includes("single clean")) {
+    if (priceText.toLowerCase().includes("one-off clean")) {
       const bespoke = priceText.toLowerCase().includes("bespoke");
       bannerLink.innerHTML = bespoke
         ? `<span>${priceText}</span><small>We will confirm the price</small>`
