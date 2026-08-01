@@ -1,0 +1,51 @@
+name: Rename one-off display
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rename-one-off-display.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-wording:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rename one-off price wording
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('preview-caption-overrides.js')
+          text = path.read_text()
+          replacements = {
+              'includes("single clean")': 'includes("one-off clean")',
+              '"Bespoke single clean"': '"Bespoke One-off Clean"',
+              '`${singlePrice} single clean`': '`${singlePrice} One-off Clean`',
+              '"Bespoke single clean (one-off clean selected)"': '"Bespoke One-off Clean (one-off clean selected)"',
+              '`${singlePrice} single clean (includes £5 one-off clean charge)`': '`${singlePrice} One-off Clean (includes £5 one-off clean charge)`'
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'Expected wording not found: {old}')
+              text = text.replace(old, new)
+          path.write_text(text)
+
+          index_path = Path('index.html')
+          index = index_path.read_text()
+          old_version = 'preview-caption-overrides.js?v=20260729-1'
+          new_version = 'preview-caption-overrides.js?v=20260801-2'
+          if old_version not in index:
+              raise SystemExit('Expected script version was not found')
+          index_path.write_text(index.replace(old_version, new_version, 1))
+          PY
+      - name: Commit wording change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add preview-caption-overrides.js index.html
+          git commit -m "Rename single clean display to One-off Clean"
+          git push
