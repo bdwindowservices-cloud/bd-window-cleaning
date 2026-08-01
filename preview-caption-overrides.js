@@ -118,12 +118,7 @@
 
   const ensureAboutHeaderLink = () => {
     const navigation = document.querySelector(".site-header nav");
-    if (!navigation) return;
-
-    const servicesLink = navigation.querySelector('a[href="#services"]');
-    if (servicesLink) servicesLink.textContent = "Cleaning";
-
-    if (navigation.querySelector('a[href="#about"]')) return;
+    if (!navigation || navigation.querySelector('a[href="#about"]')) return;
 
     const faqLink = navigation.querySelector('a[href="#faq"]');
     const aboutLink = document.createElement("a");
