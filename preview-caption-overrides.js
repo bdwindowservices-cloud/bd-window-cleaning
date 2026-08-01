@@ -43,6 +43,14 @@
     }
 
     @media (max-width: 640px) {
+      .site-header nav {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: clamp(0.78rem, 3.5vw, 0.9rem);
+        white-space: nowrap;
+      }
+
       .price-builder-panel > .price-builder-intro {
         display: none !important;
       }
