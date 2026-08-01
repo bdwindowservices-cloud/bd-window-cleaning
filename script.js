@@ -221,7 +221,7 @@ const updateMobileQuoteAmount = (price, monthly) => {
   if (!monthly) {
     mobileQuoteAmount.innerHTML = `<span>${price}</span><small>We will confirm the price</small>`;
   } else {
-    mobileQuoteAmount.innerHTML = `<span>${price} per clean,</span><small>every 6–7 weeks<br>Paid as ${monthly}/month</small>`;
+    mobileQuoteAmount.innerHTML = `<span>${price} per clean - every 6–7 weeks</span><small>Paid as ${monthly}/month</small>`;
   }
   mobileQuoteAmount.setAttribute("href", "#quote");
   if (mobileActionBar) {
@@ -258,8 +258,8 @@ const updateDesktopEstimateAmount = (price, monthly) => {
   const hasChangedPrice = quoteState.priceChanged;
 
   setDesktopEstimateState(
-    hasChangedPrice ? (monthly ? `${price} per clean,` : price) : desktopEstimateDefaultMain,
-    hasChangedPrice ? (monthly ? `every 6–7 weeks<br>Paid as ${monthly}/month` : "We will confirm the price") : desktopEstimateDefaultSub,
+    hasChangedPrice ? (monthly ? `${price} per clean - every 6–7 weeks` : price) : desktopEstimateDefaultMain,
+    hasChangedPrice ? (monthly ? `Paid as ${monthly}/month` : "We will confirm the price") : desktopEstimateDefaultSub,
     hasChangedPrice ? "Book clean" : "See prices",
     hasChangedPrice ? "ready" : "idle"
   );
@@ -418,13 +418,13 @@ const updateQuoteTotal = () => {
   const monthly = formatMoney(monthlyPrice);
 
   if (quoteTotalPrice) {
-    quoteTotalPrice.textContent = `${price} per clean,`;
+    quoteTotalPrice.textContent = `${price} per clean - every 6–7 weeks`;
   }
   if (quoteTotalMonthly) {
-    quoteTotalMonthly.innerHTML = `every 6–7 weeks<br>Paid as ${monthly}/month`;
+    quoteTotalMonthly.textContent = `Paid as ${monthly}/month`;
   }
   if (estimatedQuoteInput) {
-    estimatedQuoteInput.value = `${price} per clean, every 6–7 weeks, paid as ${monthly}/month`;
+    estimatedQuoteInput.value = `${price} per clean - every 6–7 weeks; Paid as ${monthly}/month`;
   }
 
   updateQuoteStep(true);
