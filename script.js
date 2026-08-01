@@ -48,9 +48,10 @@ const frontOptions = [
 ];
 const backOptions = [
   { label: "0", emailLabel: "No back or side sets selected", previewSets: 0, price: 0 },
-  { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 6 },
+  { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 5 },
   { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 4, price: 8 },
-  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 10 }
+  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 11 },
+  { label: "7 to 8", emailLabel: "7 to 8 sets", previewSets: 8, price: 14 }
 ];
 const quoteState = {
   frontIndex: 1,
