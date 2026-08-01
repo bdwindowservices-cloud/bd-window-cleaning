@@ -34,3 +34,5 @@ jobs:
           git add index.html
           git commit -m "Replace price FAQ with payment information"
           git push
+
+# Triggered after creation.
