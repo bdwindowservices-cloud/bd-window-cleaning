@@ -263,6 +263,16 @@
     syncBackButtons();
   };
 
+  const synchronisePreview = () => {
+    if (typeof updateHousePhotoPreview === "function") {
+      updateHousePhotoPreview();
+    }
+    updateCaption();
+    updateMobileThreeFourImageFit();
+    syncBackButtons();
+    applyUpdatedPricing();
+  };
+
   const initialiseMobileBanner = () => {
     const banner = document.querySelector(".mobile-action-bar");
     const quoteSection = document.querySelector("#quote");
@@ -300,30 +310,23 @@
     window.addEventListener("scroll", checkPosition, { passive: true });
     window.addEventListener("resize", () => {
       checkPosition();
-      updateMobileThreeFourImageFit();
+      synchronisePreview();
     });
     checkPosition();
   };
 
   const initialise = () => {
     addMobileIntro();
-    updateCaption();
     updateFrontInstruction();
-    updateMobileThreeFourImageFit();
     initialiseMobileBanner();
     initialiseBackSevenToEight();
-    applyUpdatedPricing();
+    synchronisePreview();
 
     document
       .querySelectorAll('[data-counter-action], [data-extra-button], #front-only-clean')
       .forEach((control) => {
         control.addEventListener("click", () => {
-          window.setTimeout(() => {
-            updateCaption();
-            updateMobileThreeFourImageFit();
-            syncBackButtons();
-            applyUpdatedPricing();
-          }, 0);
+          queueMicrotask(synchronisePreview);
         });
       });
   };
