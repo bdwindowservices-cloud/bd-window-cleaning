@@ -1,0 +1,36 @@
+name: Update About text
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/update-about-text.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-about:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace About section paragraph
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text()
+          old = '<p>B D Window Cleaning Services is run by Ben Drummond and works around the Southampton area. We keep things practical: clear quotes, tidy communication and a straightforward way to arrange your clean.</p>'
+          new = '<p>B D Window Services is a small local business run by Ben Drummond currently based in the Southampton area. Ben first started window cleaning in 2020 while living in Devon, Ben has focused on providing a straightforward, dependable service and leaving every customer’s windows looking their best. B D Window Services is fully insured and uses professional equipment to provide safe window cleaning.</p>'
+          if old not in text:
+              raise SystemExit('Expected About paragraph was not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - name: Commit About text change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Update About section text"
+          git push
