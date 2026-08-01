@@ -1,5 +1,6 @@
 name: Add About header link
 
+# Triggered to add the About navigation item.
 on:
   push:
     branches: [main]
