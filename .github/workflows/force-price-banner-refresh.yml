@@ -64,3 +64,5 @@ jobs:
           git add index.html preview-caption-overrides.js
           git commit -m "Force refresh of two-line price banner"
           git push
+
+# Triggered after creation.
