@@ -6,6 +6,22 @@
     "7 to 8": "Front example: 7 window sets."
   };
 
+  const frontPrices = {
+    "1 to 2": 12,
+    "3 to 4": 15,
+    "5 to 6": 18,
+    "7 to 8": 21
+  };
+
+  const backPrices = {
+    "0": 0,
+    "1 to 2": 5,
+    "3 to 4": 8,
+    "5 to 6": 11
+  };
+
+  const formatMoney = (value) => Number.isInteger(value) ? `£${value}` : `£${value.toFixed(2)}`;
+
   const style = document.createElement("style");
   style.textContent = `
     @media (min-width: 641px) {
@@ -129,6 +145,44 @@
     }
   };
 
+  const applyUpdatedPricing = () => {
+    const frontOutput = document.querySelector("#front-window-count");
+    const backOutput = document.querySelector("#back-window-count");
+    const frontOnly = document.querySelector("#front-only-clean");
+    const totalPriceElement = document.querySelector("#quote-total-price");
+    const monthlyElement = document.querySelector("#quote-total-monthly");
+    const estimatedInput = document.querySelector("#estimated-quote");
+
+    if (!frontOutput || !backOutput || !totalPriceElement || !monthlyElement) return;
+
+    const frontLabel = frontOutput.textContent.trim();
+    if (frontLabel === "9+ bespoke") return;
+
+    const frontPrice = frontPrices[frontLabel];
+    if (typeof frontPrice !== "number") return;
+
+    const backLabel = frontOnly?.checked ? "0" : backOutput.textContent.trim();
+    const backPrice = backPrices[backLabel] ?? 0;
+    const selectedExtra = document.querySelector('[data-extra-button].is-selected');
+    const extraPrice = selectedExtra ? Number(selectedExtra.dataset.extraPrice || 0) : 0;
+
+    const total = frontPrice + backPrice + extraPrice;
+    const monthly = total * 2 / 3;
+    const priceText = formatMoney(total);
+    const monthlyText = `${formatMoney(monthly)} per month`;
+
+    totalPriceElement.textContent = priceText;
+    monthlyElement.textContent = monthlyText;
+    if (estimatedInput) estimatedInput.value = `${priceText} (${formatMoney(monthly)} per month)`;
+
+    const desktopMain = document.querySelector("#desktop-estimate-main");
+    const desktopSub = document.querySelector("#desktop-estimate-sub");
+    if (desktopMain && desktopMain.textContent.includes("£")) desktopMain.textContent = `${priceText} per clean`;
+    if (desktopSub && desktopSub.textContent) desktopSub.textContent = monthlyText;
+
+    showExistingMobilePrice();
+  };
+
   const initialiseMobileBanner = () => {
     const banner = document.querySelector(".mobile-action-bar");
     const quoteSection = document.querySelector("#quote");
@@ -173,11 +227,17 @@
     updateCaption();
     updateFrontInstruction();
     initialiseMobileBanner();
+    applyUpdatedPricing();
 
     document
-      .querySelectorAll('[data-counter-action][data-counter-target="front"]')
-      .forEach((button) => {
-        button.addEventListener("click", () => window.setTimeout(updateCaption, 0));
+      .querySelectorAll('[data-counter-action], [data-extra-button], #front-only-clean')
+      .forEach((control) => {
+        control.addEventListener("click", () => {
+          window.setTimeout(() => {
+            updateCaption();
+            applyUpdatedPricing();
+          }, 0);
+        });
       });
   };
 
