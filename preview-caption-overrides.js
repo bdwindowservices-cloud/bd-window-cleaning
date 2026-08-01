@@ -391,6 +391,7 @@
 
     const priceText = price.textContent.trim();
     const monthlyText = monthly.textContent.trim();
+    const monthlyHtml = monthly.innerHTML.trim();
     if (!priceText || priceText === "£-") return;
 
     if (priceText.toLowerCase().includes("one-off clean")) {
@@ -401,7 +402,7 @@
     } else if (priceText === "Bespoke quote") {
       bannerLink.innerHTML = `<span>${priceText}</span><small>We will confirm the price</small>`;
     } else {
-      bannerLink.innerHTML = `<span>${priceText} per clean</span><small>${monthlyText}</small>`;
+      bannerLink.innerHTML = `<span>${priceText}</span><small>${monthlyHtml}</small>`;
     }
   };
 

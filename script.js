@@ -221,7 +221,7 @@ const updateMobileQuoteAmount = (price, monthly) => {
   if (!monthly) {
     mobileQuoteAmount.innerHTML = `<span>${price}</span><small>We will confirm the price</small>`;
   } else {
-    mobileQuoteAmount.innerHTML = `<span>${price} per clean</span><small>${monthly} per month</small>`;
+    mobileQuoteAmount.innerHTML = `<span>${price} per clean,</span><small>every 6–7 weeks<br>Paid as ${monthly}/month</small>`;
   }
   mobileQuoteAmount.setAttribute("href", "#quote");
   if (mobileActionBar) {
@@ -234,7 +234,7 @@ const setDesktopEstimateState = (main, sub, cta, state) => {
     desktopEstimateMain.textContent = main;
   }
   if (desktopEstimateSub) {
-    desktopEstimateSub.textContent = sub;
+    desktopEstimateSub.innerHTML = sub;
   }
   if (desktopEstimateCta) {
     desktopEstimateCta.textContent = cta;
@@ -259,7 +259,7 @@ const updateDesktopEstimateAmount = (price, monthly) => {
 
   setDesktopEstimateState(
     hasChangedPrice ? (monthly ? `${price} per clean` : price) : desktopEstimateDefaultMain,
-    hasChangedPrice ? (monthly ? `${monthly} per month` : "We will confirm the price") : desktopEstimateDefaultSub,
+    hasChangedPrice ? (monthly ? `every 6–7 weeks<br>Paid as ${monthly}/month` : "We will confirm the price") : desktopEstimateDefaultSub,
     hasChangedPrice ? "Book clean" : "See prices",
     hasChangedPrice ? "ready" : "idle"
   );
@@ -314,14 +314,14 @@ const updateWindowPreview = () => {
 
 const setFloatingBookingDatePrompt = () => {
   const price = quoteTotalPrice ? quoteTotalPrice.textContent : "";
-  const monthly = quoteTotalMonthly ? quoteTotalMonthly.textContent : "";
+  const monthly = quoteTotalMonthly ? quoteTotalMonthly.innerHTML : "";
   const isBespoke = Boolean(getFrontOption().bespoke || (!quoteState.frontOnly && getBackOption().bespoke));
 
   if (price && desktopEstimateMain) {
-    desktopEstimateMain.textContent = `${price}${isBespoke ? "" : " per clean"} - Choose a cleaning date`;
+    desktopEstimateMain.textContent = `${price} - Choose a cleaning date`;
   }
   if (desktopEstimateSub) {
-    desktopEstimateSub.textContent = monthly;
+    desktopEstimateSub.innerHTML = monthly;
   }
   if (desktopEstimateCta) {
     desktopEstimateCta.textContent = "Book clean";
@@ -331,7 +331,7 @@ const setFloatingBookingDatePrompt = () => {
     desktopActionBar.classList.remove("is-progress");
   }
   if (price && monthly && mobileQuoteAmount) {
-    mobileQuoteAmount.innerHTML = `<span>${price}${isBespoke ? "" : " per clean"} - Choose a cleaning date</span><small>${monthly}</small>`;
+    mobileQuoteAmount.innerHTML = `<span>${price} - Choose a cleaning date</span><small>${monthly}</small>`;
   }
 };
 
@@ -418,13 +418,13 @@ const updateQuoteTotal = () => {
   const monthly = formatMoney(monthlyPrice);
 
   if (quoteTotalPrice) {
-    quoteTotalPrice.textContent = price;
+    quoteTotalPrice.textContent = `${price} per clean,`;
   }
   if (quoteTotalMonthly) {
-    quoteTotalMonthly.textContent = `${monthly} per month`;
+    quoteTotalMonthly.innerHTML = `every 6–7 weeks<br>Paid as ${monthly}/month`;
   }
   if (estimatedQuoteInput) {
-    estimatedQuoteInput.value = `${price} (${monthly} per month)`;
+    estimatedQuoteInput.value = `${price} per clean, every 6–7 weeks, paid as ${monthly}/month`;
   }
 
   updateQuoteStep(true);
