@@ -49,3 +49,5 @@ jobs:
           git add preview-caption-overrides.js index.html
           git commit -m "Rename single clean display to One-off Clean"
           git push
+
+# Triggered after creation.
