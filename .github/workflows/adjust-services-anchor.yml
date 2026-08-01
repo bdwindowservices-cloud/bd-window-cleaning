@@ -1,0 +1,47 @@
+name: Adjust Services anchor position
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/adjust-services-anchor.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-anchor-offset:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keep Services heading visible below sticky header
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('styles.css')
+          text = path.read_text()
+          old = 'html { scroll-behavior: smooth; }'
+          new = '''html { scroll-behavior: smooth; }
+#services { scroll-margin-top: 96px; }'''
+          if old not in text:
+              raise SystemExit('Expected html scroll rule was not found')
+          text = text.replace(old, new, 1)
+
+          old_mobile = '''@media (max-width: 900px) {
+  .site-header { align-items: flex-start; flex-direction: column; }'''
+          new_mobile = '''@media (max-width: 900px) {
+  #services { scroll-margin-top: 132px; }
+  .site-header { align-items: flex-start; flex-direction: column; }'''
+          if old_mobile not in text:
+              raise SystemExit('Expected mobile media block was not found')
+          text = text.replace(old_mobile, new_mobile, 1)
+          path.write_text(text)
+          PY
+      - name: Commit anchor offset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add styles.css
+          git commit -m "Keep Services heading visible below header"
+          git push
