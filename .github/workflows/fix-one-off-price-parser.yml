@@ -51,3 +51,5 @@ jobs:
           git add preview-caption-overrides.js index.html
           git commit -m "Fix one-off clean price calculation"
           git push
+
+# Triggered after creation.
