@@ -6,6 +6,9 @@
     "7 to 8": "Front example: 7 window sets."
   };
 
+  const oneOffSurcharge = 5;
+  let oneOffActive = false;
+
   const style = document.createElement("style");
   style.textContent = `
     #services,
@@ -116,6 +119,16 @@
   `;
   document.head.append(style);
 
+  const formatMoney = (value) => {
+    const number = Number(value);
+    return Number.isInteger(number) ? `£${number}` : `£${number.toFixed(2)}`;
+  };
+
+  const parseMoney = (text) => {
+    const value = Number(String(text).replace(/[^0-9.]/g, ""));
+    return Number.isFinite(value) ? value : null;
+  };
+
   const ensureAboutHeaderLink = () => {
     const navigation = document.querySelector(".site-header nav");
     if (!navigation || navigation.querySelector('a[href="#about"]')) return;
@@ -160,6 +173,173 @@
           history.pushState(null, "", selector);
         }
       });
+    });
+  };
+
+  const updateOneOffFormField = (checked) => {
+    const hiddenInput = document.querySelector("#front-only-input");
+    if (!hiddenInput) return;
+
+    hiddenInput.name = "One-off clean";
+    hiddenInput.value = checked ? "Yes - £5 added" : "No";
+  };
+
+  const updateOneOffOptionCopy = () => {
+    const checkbox = document.querySelector("#front-only-clean");
+    const label = checkbox?.closest("label");
+    if (!checkbox || !label) return;
+
+    checkbox.setAttribute("aria-label", "One-off clean, £5 extra");
+    const textNode = Array.from(label.childNodes).find(
+      (node) => node.nodeType === Node.TEXT_NODE
+    );
+
+    if (textNode) {
+      textNode.textContent = "One-off clean £5+";
+    } else {
+      label.append("One-off clean £5+");
+    }
+
+    updateOneOffFormField(checkbox.checked);
+  };
+
+  const updateOneOffActionBars = (displayText, bespoke) => {
+    const mobileQuote = document.querySelector("#mobile-quote-amount");
+    const desktopBar = document.querySelector(".desktop-action-bar");
+    const desktopMain = document.querySelector("#desktop-estimate-main");
+    const desktopSub = document.querySelector("#desktop-estimate-sub");
+    const desktopCta = document.querySelector("#desktop-estimate-cta");
+
+    if (mobileQuote) {
+      mobileQuote.innerHTML = bespoke
+        ? `<span>${displayText}</span><small>We will confirm the price</small>`
+        : `<span>${displayText}</span>`;
+      mobileQuote.setAttribute("href", "#quote");
+    }
+
+    if (desktopMain) desktopMain.textContent = displayText;
+    if (desktopSub) desktopSub.textContent = bespoke ? "We will confirm the price" : "";
+    if (desktopCta) desktopCta.textContent = "Book clean";
+    if (desktopBar) {
+      desktopBar.classList.add("is-ready");
+      desktopBar.classList.remove("is-progress");
+    }
+  };
+
+  const applyOneOffPricing = () => {
+    if (!oneOffActive) return;
+
+    const price = document.querySelector("#quote-total-price");
+    const monthly = document.querySelector("#quote-total-monthly");
+    const estimated = document.querySelector("#estimated-quote");
+    if (!price || !monthly) return;
+
+    const currentPriceText = price.textContent.trim();
+    if (!currentPriceText || currentPriceText === "£-") return;
+
+    updateOneOffFormField(true);
+
+    if (currentPriceText.toLowerCase().includes("single clean")) {
+      monthly.hidden = true;
+      monthly.textContent = "";
+      return;
+    }
+
+    const bespoke = currentPriceText.toLowerCase().includes("bespoke");
+    if (bespoke) {
+      const displayText = "Bespoke single clean";
+      price.textContent = displayText;
+      monthly.hidden = true;
+      monthly.textContent = "";
+      if (estimated) estimated.value = "Bespoke single clean (one-off clean selected)";
+      updateOneOffActionBars(displayText, true);
+      return;
+    }
+
+    const basePrice = parseMoney(currentPriceText);
+    if (basePrice === null) return;
+
+    const singlePrice = formatMoney(basePrice + oneOffSurcharge);
+    const displayText = `${singlePrice} single clean`;
+    price.textContent = displayText;
+    monthly.hidden = true;
+    monthly.textContent = "";
+    if (estimated) {
+      estimated.value = `${singlePrice} single clean (includes £5 one-off clean charge)`;
+    }
+    updateOneOffActionBars(displayText, false);
+  };
+
+  const markOriginalCalculatorAsChanged = () => {
+    const extraButton = document.querySelector("[data-extra-button]");
+    if (!extraButton) return;
+
+    extraButton.click();
+    extraButton.click();
+  };
+
+  const initialiseOneOffOption = () => {
+    const checkbox = document.querySelector("#front-only-clean");
+    const monthly = document.querySelector("#quote-total-monthly");
+    if (!checkbox) return;
+
+    oneOffActive = checkbox.checked;
+    updateOneOffOptionCopy();
+
+    checkbox.addEventListener(
+      "change",
+      (event) => {
+        event.stopImmediatePropagation();
+        oneOffActive = checkbox.checked;
+        updateOneOffFormField(oneOffActive);
+
+        if (!oneOffActive && monthly) {
+          monthly.hidden = false;
+        }
+
+        markOriginalCalculatorAsChanged();
+
+        queueMicrotask(() => {
+          if (oneOffActive) {
+            applyOneOffPricing();
+          } else if (monthly) {
+            monthly.hidden = false;
+          }
+        });
+      },
+      true
+    );
+
+    document.addEventListener("click", (event) => {
+      const calculatorControl = event.target.closest(
+        "[data-counter-action], [data-extra-button]"
+      );
+      if (calculatorControl && oneOffActive) {
+        queueMicrotask(applyOneOffPricing);
+      }
+
+      const bookingControl = event.target.closest(
+        "#booking-next-button, #desktop-estimate-action, #mobile-quote-amount"
+      );
+      if (bookingControl && oneOffActive) {
+        setTimeout(() => {
+          const bookingStep = document.querySelector("#booking-date-step");
+          if (!bookingStep || bookingStep.hidden) return;
+
+          const priceText = document.querySelector("#quote-total-price")?.textContent.trim();
+          const desktopMain = document.querySelector("#desktop-estimate-main");
+          const desktopSub = document.querySelector("#desktop-estimate-sub");
+          const mobileQuote = document.querySelector("#mobile-quote-amount");
+
+          if (priceText && desktopMain) {
+            desktopMain.textContent = `${priceText} - Choose a cleaning date`;
+          }
+          if (desktopSub) desktopSub.textContent = "";
+          if (priceText && mobileQuote) {
+            mobileQuote.innerHTML = `<span>${priceText} - Choose a cleaning date</span>`;
+          }
+        }, 0);
+      }
     });
   };
 
@@ -213,7 +393,12 @@
     const monthlyText = monthly.textContent.trim();
     if (!priceText || priceText === "£-") return;
 
-    if (priceText === "Bespoke quote") {
+    if (priceText.toLowerCase().includes("single clean")) {
+      const bespoke = priceText.toLowerCase().includes("bespoke");
+      bannerLink.innerHTML = bespoke
+        ? `<span>${priceText}</span><small>We will confirm the price</small>`
+        : `<span>${priceText}</span>`;
+    } else if (priceText === "Bespoke quote") {
       bannerLink.innerHTML = `<span>${priceText}</span><small>We will confirm the price</small>`;
     } else {
       bannerLink.innerHTML = `<span>${priceText} per clean</span><small>${monthlyText}</small>`;
@@ -272,6 +457,7 @@
   const initialise = () => {
     ensureAboutHeaderLink();
     initialisePreciseHeaderLinks();
+    initialiseOneOffOption();
     addMobileIntro();
     updateCaption();
     updateFrontInstruction();
