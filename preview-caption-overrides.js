@@ -120,6 +120,41 @@
     navigation.insertBefore(aboutLink, faqLink || null);
   };
 
+  const initialisePreciseHeaderLinks = () => {
+    const header = document.querySelector(".site-header");
+    const links = document.querySelectorAll(
+      '.site-header nav a[href="#faq"], .site-header nav a[href="#contact"]'
+    );
+
+    if (!header || !links.length) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    links.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const selector = link.getAttribute("href");
+        const section = selector ? document.querySelector(selector) : null;
+        const contentStart = section?.firstElementChild || section;
+        if (!selector || !contentStart) return;
+
+        event.preventDefault();
+
+        const headerHeight = header.getBoundingClientRect().height;
+        const contentTop = window.scrollY + contentStart.getBoundingClientRect().top;
+        const destination = Math.max(0, contentTop - headerHeight - 18);
+
+        window.scrollTo({
+          top: destination,
+          behavior: reducedMotion.matches ? "auto" : "smooth"
+        });
+
+        if (window.location.hash !== selector) {
+          history.pushState(null, "", selector);
+        }
+      });
+    });
+  };
+
   const updateCaption = () => {
     const frontCount = document.querySelector("#front-window-count");
     const caption = document.querySelector("#window-preview-caption");
@@ -228,6 +263,7 @@
 
   const initialise = () => {
     ensureAboutHeaderLink();
+    initialisePreciseHeaderLinks();
     addMobileIntro();
     updateCaption();
     updateFrontInstruction();
