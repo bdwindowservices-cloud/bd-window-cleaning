@@ -8,12 +8,14 @@
 
   const style = document.createElement("style");
   style.textContent = `
-    #services {
+    #services,
+    #about {
       scroll-margin-top: 96px;
     }
 
     @media (max-width: 900px) {
-      #services {
+      #services,
+      #about {
         scroll-margin-top: 132px;
       }
     }
@@ -105,6 +107,18 @@
     }
   `;
   document.head.append(style);
+
+  const ensureAboutHeaderLink = () => {
+    const navigation = document.querySelector(".site-header nav");
+    if (!navigation || navigation.querySelector('a[href="#about"]')) return;
+
+    const faqLink = navigation.querySelector('a[href="#faq"]');
+    const aboutLink = document.createElement("a");
+    aboutLink.href = "#about";
+    aboutLink.textContent = "About";
+
+    navigation.insertBefore(aboutLink, faqLink || null);
+  };
 
   const updateCaption = () => {
     const frontCount = document.querySelector("#front-window-count");
@@ -213,6 +227,7 @@
   };
 
   const initialise = () => {
+    ensureAboutHeaderLink();
     addMobileIntro();
     updateCaption();
     updateFrontInstruction();
