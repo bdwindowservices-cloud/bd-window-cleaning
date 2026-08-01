@@ -84,6 +84,21 @@
         line-height: 1.05;
       }
 
+      .preview-house.mobile-three-four-fit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+      }
+
+      .preview-house.mobile-three-four-fit .house-preview-photo {
+        width: 100%;
+        height: auto;
+        min-height: 0 !important;
+        aspect-ratio: auto;
+        object-fit: contain !important;
+      }
+
       .mobile-action-bar {
         opacity: 0;
         pointer-events: none;
@@ -107,6 +122,15 @@
 
     const captionText = frontPreviewCaptionText[frontCount.textContent.trim()];
     if (captionText) caption.textContent = captionText;
+  };
+
+  const updateMobileThreeFourImageFit = () => {
+    const frontCount = document.querySelector("#front-window-count");
+    const previewHouse = document.querySelector(".preview-house");
+    if (!frontCount || !previewHouse) return;
+
+    const useFullImage = window.innerWidth <= 640 && frontCount.textContent.trim() === "3 to 4";
+    previewHouse.classList.toggle("mobile-three-four-fit", useFullImage);
   };
 
   const updateFrontInstruction = () => {
@@ -274,7 +298,10 @@
     }
 
     window.addEventListener("scroll", checkPosition, { passive: true });
-    window.addEventListener("resize", checkPosition);
+    window.addEventListener("resize", () => {
+      checkPosition();
+      updateMobileThreeFourImageFit();
+    });
     checkPosition();
   };
 
@@ -282,6 +309,7 @@
     addMobileIntro();
     updateCaption();
     updateFrontInstruction();
+    updateMobileThreeFourImageFit();
     initialiseMobileBanner();
     initialiseBackSevenToEight();
     applyUpdatedPricing();
@@ -292,6 +320,7 @@
         control.addEventListener("click", () => {
           window.setTimeout(() => {
             updateCaption();
+            updateMobileThreeFourImageFit();
             syncBackButtons();
             applyUpdatedPricing();
           }, 0);
