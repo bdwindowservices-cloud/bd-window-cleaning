@@ -74,3 +74,5 @@ jobs:
           git add script.js index.html
           git commit -m "Show recurring price on two lines"
           git push
+
+# Triggered after creation.
