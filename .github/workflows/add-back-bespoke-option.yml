@@ -80,3 +80,5 @@ jobs:
           git add script.js
           git commit -m "Add 9+ bespoke back or side option"
           git push
+
+# Triggered after creation so GitHub registers and runs the workflow.
