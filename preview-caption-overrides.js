@@ -8,6 +8,16 @@
 
   const style = document.createElement("style");
   style.textContent = `
+    #services {
+      scroll-margin-top: 96px;
+    }
+
+    @media (max-width: 900px) {
+      #services {
+        scroll-margin-top: 132px;
+      }
+    }
+
     @media (min-width: 641px) {
       .counter-control {
         grid-template-columns: 42px minmax(96px, auto) 42px;
