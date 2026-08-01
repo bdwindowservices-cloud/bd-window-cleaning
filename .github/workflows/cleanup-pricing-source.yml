@@ -1,0 +1,86 @@
+name: Consolidate calculator pricing
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cleanup-pricing-source.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make script.js the single pricing source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          script_path = Path('script.js')
+          script = script_path.read_text()
+
+          old_back = '''const backOptions = [
+  { label: "0", emailLabel: "No back or side sets selected", previewSets: 0, price: 0 },
+  { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 6 },
+  { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 4, price: 8 },
+  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 10 }
+];'''
+
+          new_back = '''const backOptions = [
+  { label: "0", emailLabel: "No back or side sets selected", previewSets: 0, price: 0 },
+  { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 5 },
+  { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 4, price: 8 },
+  { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 11 },
+  { label: "7 to 8", emailLabel: "7 to 8 sets", previewSets: 8, price: 14 }
+];'''
+
+          if old_back not in script:
+              raise SystemExit('Expected old backOptions block not found in script.js')
+          script_path.write_text(script.replace(old_back, new_back, 1))
+
+          override_path = Path('preview-caption-overrides.js')
+          override = override_path.read_text()
+
+          override, count = re.subn(
+              r'''\n  const frontPrices = \{.*?\n  let customBackSevenToEight = false;\n\n  const formatMoney = .*?;\n''',
+              '\n',
+              override,
+              count=1,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit('Could not remove duplicated pricing tables')
+
+          override, count = re.subn(
+              r'''\n  const applyUpdatedPricing = \(\) => \{.*?\n  \};\n\n  const syncBackButtons = \(\) => \{.*?\n  \};\n\n  const initialiseBackSevenToEight = \(\) => \{.*?\n  \};\n''',
+              '\n',
+              override,
+              count=1,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit('Could not remove duplicated pricing functions')
+
+          override = override.replace('    initialiseBackSevenToEight();\n', '')
+          override = override.replace('    applyUpdatedPricing();\n', '')
+          override = override.replace('            syncBackButtons();\n', '')
+          override = override.replace('            applyUpdatedPricing();\n', '')
+
+          override_path.write_text(override)
+          PY
+
+      - name: Remove one-time workflow
+        run: rm .github/workflows/cleanup-pricing-source.yml
+
+      - name: Commit calculator cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add script.js preview-caption-overrides.js .github/workflows/cleanup-pricing-source.yml
+          git commit -m "Make script.js the single calculator pricing source"
+          git push
