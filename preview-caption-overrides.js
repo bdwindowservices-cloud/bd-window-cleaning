@@ -9,13 +9,17 @@
   const style = document.createElement("style");
   style.textContent = `
     #services,
-    #about {
+    #about,
+    #faq,
+    #contact {
       scroll-margin-top: 96px;
     }
 
     @media (max-width: 900px) {
       #services,
-      #about {
+      #about,
+      #faq,
+      #contact {
         scroll-margin-top: 132px;
       }
     }
