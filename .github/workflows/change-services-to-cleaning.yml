@@ -34,3 +34,4 @@ jobs:
           git add index.html
           git commit -m "Rename Services header link to Cleaning"
           git push
+# Triggered after workflow creation
