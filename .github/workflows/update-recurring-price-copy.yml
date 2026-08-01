@@ -138,3 +138,5 @@ jobs:
           git add script.js preview-caption-overrides.js index.html
           git commit -m "Show cleaning frequency and monthly payment in prices"
           git push
+
+# Triggered after creation.
