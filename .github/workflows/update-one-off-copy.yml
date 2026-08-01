@@ -33,3 +33,5 @@ jobs:
           git add index.html
           git commit -m "Update one-off clean checkbox copy"
           git push
+
+# Triggered after creation.
