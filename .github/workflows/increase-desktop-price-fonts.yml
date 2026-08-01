@@ -65,3 +65,5 @@ jobs:
           git add preview-caption-overrides.js index.html
           git commit -m "Increase desktop price font sizes slightly"
           git push
+
+# Triggered after creation.
