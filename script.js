@@ -258,7 +258,7 @@ const updateDesktopEstimateAmount = (price, monthly) => {
   const hasChangedPrice = quoteState.priceChanged;
 
   setDesktopEstimateState(
-    hasChangedPrice ? (monthly ? `${price} per clean` : price) : desktopEstimateDefaultMain,
+    hasChangedPrice ? (monthly ? `${price} per clean,` : price) : desktopEstimateDefaultMain,
     hasChangedPrice ? (monthly ? `every 6–7 weeks<br>Paid as ${monthly}/month` : "We will confirm the price") : desktopEstimateDefaultSub,
     hasChangedPrice ? "Book clean" : "See prices",
     hasChangedPrice ? "ready" : "idle"
