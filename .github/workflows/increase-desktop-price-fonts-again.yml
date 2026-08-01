@@ -59,3 +59,5 @@ jobs:
           git add index.html
           git commit -m "Increase desktop price fonts to 1.25rem and 1.05rem"
           git push
+
+# Triggered after creation.
