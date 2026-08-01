@@ -45,3 +45,5 @@ jobs:
           git add styles.css
           git commit -m "Keep Services heading visible below header"
           git push
+
+# Triggered after creation so GitHub recognises the workflow on the default branch.
