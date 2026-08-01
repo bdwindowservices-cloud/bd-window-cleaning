@@ -51,7 +51,8 @@ const backOptions = [
   { label: "1 to 2", emailLabel: "1 to 2 sets", previewSets: 2, price: 5 },
   { label: "3 to 4", emailLabel: "3 to 4 sets", previewSets: 4, price: 8 },
   { label: "5 to 6", emailLabel: "5 to 6 sets", previewSets: 6, price: 11 },
-  { label: "7 to 8", emailLabel: "7 to 8 sets", previewSets: 8, price: 14 }
+  { label: "7 to 8", emailLabel: "7 to 8 sets", previewSets: 8, price: 14 },
+  { label: "9+ bespoke", emailLabel: "9+ sets - bespoke quote", previewSets: 0, price: null, bespoke: true }
 ];
 const quoteState = {
   frontIndex: 1,
@@ -314,7 +315,7 @@ const updateWindowPreview = () => {
 const setFloatingBookingDatePrompt = () => {
   const price = quoteTotalPrice ? quoteTotalPrice.textContent : "";
   const monthly = quoteTotalMonthly ? quoteTotalMonthly.textContent : "";
-  const isBespoke = getFrontOption().bespoke;
+  const isBespoke = Boolean(getFrontOption().bespoke || (!quoteState.frontOnly && getBackOption().bespoke));
 
   if (price && desktopEstimateMain) {
     desktopEstimateMain.textContent = `${price}${isBespoke ? "" : " per clean"} - Choose a cleaning date`;
@@ -357,7 +358,7 @@ const updateQuoteStep = (hasCompleteSelection) => {
 const updateQuoteTotal = () => {
   const frontOption = getFrontOption();
   const backOption = getBackOption();
-  const isBespoke = Boolean(frontOption.bespoke);
+  const isBespoke = Boolean(frontOption.bespoke || (!quoteState.frontOnly && backOption.bespoke));
 
   setQuoteProgressState(false);
   if (quoteTotal) {
@@ -384,6 +385,14 @@ const updateQuoteTotal = () => {
   }
 
   if (isBespoke) {
+    const bespokeLabels = [];
+    if (frontOption.bespoke) {
+      bespokeLabels.push(`Front: ${frontOption.emailLabel}`);
+    }
+    if (!quoteState.frontOnly && backOption.bespoke) {
+      bespokeLabels.push(`Back or side: ${backOption.emailLabel}`);
+    }
+
     if (quoteTotalPrice) {
       quoteTotalPrice.textContent = "Bespoke quote";
     }
@@ -391,7 +400,7 @@ const updateQuoteTotal = () => {
       quoteTotalMonthly.textContent = "We will confirm the price with you.";
     }
     if (estimatedQuoteInput) {
-      estimatedQuoteInput.value = `Bespoke quote (${frontOption.emailLabel})`;
+      estimatedQuoteInput.value = `Bespoke quote (${bespokeLabels.join("; ")})`;
     }
 
     updateQuoteStep(true);
