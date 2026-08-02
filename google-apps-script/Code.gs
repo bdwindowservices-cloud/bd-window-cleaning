@@ -273,12 +273,14 @@ function bookingReference_(date) {
 
 function successPage_(reference) {
   const destination = CONFIG.websiteUrl + "?quote=sent&reference=" + encodeURIComponent(reference) + "#quote-status";
-  return HtmlService.createHtmlOutput(responsePage_(
-    "Booking received",
-    "Your confirmation email is on its way.",
-    destination,
-    "Return to the website"
-  ));
+  return HtmlService.createHtmlOutput(
+    "<!doctype html><html lang=\"en-GB\"><head><meta charset=\"utf-8\">" +
+    "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
+    "<meta http-equiv=\"refresh\" content=\"0;url=" + html_(destination) + "\">" +
+    "<title>Returning to " + html_(CONFIG.businessName) + "</title>" +
+    "<script>window.location.replace(" + JSON.stringify(destination) + ");<\/script>" +
+    "</head><body></body></html>"
+  );
 }
 
 function errorPage_() {
