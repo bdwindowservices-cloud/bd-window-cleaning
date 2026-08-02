@@ -1,4 +1,26 @@
 (() => {
+  const params = new URLSearchParams(window.location.search);
+  const bookingWasSent = params.get("quote") === "sent";
+
+  if (bookingWasSent) {
+    const confirmation = document.querySelector("#quote-status");
+
+    if (confirmation) {
+      confirmation.innerHTML = `
+        <strong>Thank you, your appointment request has been sent successfully.</strong>
+        <span>We will email you confirmation of your booked appointment. For any changes to your appointment or anything urgent please email us on <a href="mailto:bdwindowservices@gmail.com">bdwindowservices@gmail.com</a>.</span>
+      `;
+    }
+
+    document
+      .querySelectorAll(".desktop-action-bar, .mobile-action-bar")
+      .forEach((banner) => {
+        banner.hidden = true;
+        banner.setAttribute("aria-hidden", "true");
+        banner.style.setProperty("display", "none", "important");
+      });
+  }
+
   const quoteForm = document.querySelector("#quote-form");
   const quoteDetails = document.querySelector("#quote-details");
   const bookingNextButton = document.querySelector("#booking-next-button");
