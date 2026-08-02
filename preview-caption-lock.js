@@ -54,12 +54,34 @@
   }
 
   const bookingDateStep = document.querySelector("#booking-date-step");
+  const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
   const bookingNextHint = document.querySelector("#booking-next-hint");
   const bookingNextButton = document.querySelector("#booking-next-button");
   const bookCleanButton = document.querySelector("#book-clean-button");
+  const desktopEstimateMain = document.querySelector("#desktop-estimate-main");
   const desktopEstimateCta = document.querySelector("#desktop-estimate-cta");
+  const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
   const appointmentPrompt = "Step 3: choose your appointment date and time";
+  const chooseDateLabel = "Choose a date";
   const bookingSummaryLabel = "Booking Summary";
+  const datePromptSuffix = " - Choose a cleaning date";
+
+  const hasSelectedBookingDate = () =>
+    Array.from(bookingDateOptions).some((option) => option.checked);
+
+  const removeDatePromptFromBanners = () => {
+    if (desktopEstimateMain) {
+      const currentText = desktopEstimateMain.textContent;
+      if (currentText.includes(datePromptSuffix)) {
+        desktopEstimateMain.textContent = currentText.replace(datePromptSuffix, "");
+      }
+    }
+
+    const mobileMain = mobileQuoteAmount?.querySelector("span");
+    if (mobileMain && mobileMain.textContent.includes(datePromptSuffix)) {
+      mobileMain.textContent = mobileMain.textContent.replace(datePromptSuffix, "");
+    }
+  };
 
   const updateAppointmentStep = () => {
     if (!bookingDateStep) return;
@@ -69,29 +91,43 @@
 
     bookingDateStep.setAttribute("aria-label", "Choose your appointment date and time");
 
+    const stepIsOpen = !bookingDateStep.hidden;
+    const dateSelected = hasSelectedBookingDate();
+    const targetButtonLabel = dateSelected ? bookingSummaryLabel : chooseDateLabel;
+
     if (
       bookingNextHint &&
-      !bookingDateStep.hidden &&
+      stepIsOpen &&
       bookingNextHint.textContent.trim() !== appointmentPrompt
     ) {
       bookingNextHint.textContent = appointmentPrompt;
     }
 
-    if (
-      bookCleanButton &&
-      !bookCleanButton.disabled &&
-      bookCleanButton.textContent.trim() !== bookingSummaryLabel
-    ) {
-      bookCleanButton.textContent = bookingSummaryLabel;
+    if (bookCleanButton) {
+      const isSubmitting =
+        bookCleanButton.disabled &&
+        bookCleanButton.textContent.toLowerCase().includes("sending");
+
+      if (!isSubmitting && bookCleanButton.textContent.trim() !== targetButtonLabel) {
+        bookCleanButton.textContent = targetButtonLabel;
+      }
     }
 
     if (desktopEstimateCta) {
       const currentLabel = desktopEstimateCta.textContent.trim();
-      if (!bookingDateStep.hidden && currentLabel !== bookingSummaryLabel) {
-        desktopEstimateCta.textContent = bookingSummaryLabel;
-      } else if (bookingDateStep.hidden && currentLabel === bookingSummaryLabel) {
+
+      if (stepIsOpen && currentLabel !== targetButtonLabel) {
+        desktopEstimateCta.textContent = targetButtonLabel;
+      } else if (
+        !stepIsOpen &&
+        (currentLabel === chooseDateLabel || currentLabel === bookingSummaryLabel)
+      ) {
         desktopEstimateCta.textContent = "Book clean";
       }
+    }
+
+    if (stepIsOpen && dateSelected) {
+      removeDatePromptFromBanners();
     }
   };
 
@@ -122,6 +158,15 @@
     });
   }
 
+  if (desktopEstimateMain) {
+    const desktopMainObserver = new MutationObserver(updateAppointmentStep);
+    desktopMainObserver.observe(desktopEstimateMain, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  }
+
   if (desktopEstimateCta) {
     const desktopCtaObserver = new MutationObserver(updateAppointmentStep);
     desktopCtaObserver.observe(desktopEstimateCta, {
@@ -130,6 +175,19 @@
       subtree: true
     });
   }
+
+  if (mobileQuoteAmount) {
+    const mobileBannerObserver = new MutationObserver(updateAppointmentStep);
+    mobileBannerObserver.observe(mobileQuoteAmount, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  }
+
+  bookingDateOptions.forEach((option) => {
+    option.addEventListener("change", updateAppointmentStep);
+  });
 
   if (bookingNextButton) {
     bookingNextButton.addEventListener("click", () => {
