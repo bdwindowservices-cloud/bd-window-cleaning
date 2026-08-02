@@ -53,6 +53,8 @@
     scheduleExactPictureCaption();
   }
 
+  const quoteDetails = document.querySelector("#quote-details");
+  const quoteNextButton = document.querySelector("#quote-next-button");
   const bookingDateStep = document.querySelector("#booking-date-step");
   const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
   const bookingNextHint = document.querySelector("#booking-next-hint");
@@ -91,13 +93,22 @@
 
     bookingDateStep.setAttribute("aria-label", "Choose your appointment date and time");
 
-    const stepIsOpen = !bookingDateStep.hidden;
+    const stepTwoIsOpen = Boolean(quoteDetails && !quoteDetails.hidden);
+    const stepThreeIsOpen = !bookingDateStep.hidden;
     const dateSelected = hasSelectedBookingDate();
     const targetButtonLabel = dateSelected ? bookingSummaryLabel : chooseDateLabel;
 
+    if (quoteNextButton && quoteNextButton.hidden !== stepTwoIsOpen) {
+      quoteNextButton.hidden = stepTwoIsOpen;
+    }
+
+    if (bookingNextButton && bookingNextButton.hidden !== stepThreeIsOpen) {
+      bookingNextButton.hidden = stepThreeIsOpen;
+    }
+
     if (
       bookingNextHint &&
-      stepIsOpen &&
+      stepThreeIsOpen &&
       bookingNextHint.textContent.trim() !== appointmentPrompt
     ) {
       bookingNextHint.textContent = appointmentPrompt;
@@ -116,20 +127,28 @@
     if (desktopEstimateCta) {
       const currentLabel = desktopEstimateCta.textContent.trim();
 
-      if (stepIsOpen && currentLabel !== targetButtonLabel) {
+      if (stepThreeIsOpen && currentLabel !== targetButtonLabel) {
         desktopEstimateCta.textContent = targetButtonLabel;
       } else if (
-        !stepIsOpen &&
+        !stepThreeIsOpen &&
         (currentLabel === chooseDateLabel || currentLabel === bookingSummaryLabel)
       ) {
         desktopEstimateCta.textContent = "Book clean";
       }
     }
 
-    if (stepIsOpen && dateSelected) {
+    if (stepThreeIsOpen && dateSelected) {
       removeDatePromptFromBanners();
     }
   };
+
+  if (quoteDetails) {
+    const quoteDetailsObserver = new MutationObserver(updateAppointmentStep);
+    quoteDetailsObserver.observe(quoteDetails, {
+      attributes: true,
+      attributeFilter: ["hidden"]
+    });
+  }
 
   if (bookingDateStep) {
     const bookingStepObserver = new MutationObserver(updateAppointmentStep);
