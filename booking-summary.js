@@ -221,6 +221,13 @@
       background: #ffffff;
     }
 
+    .booking-summary-privacy-link {
+      color: #07575b;
+      font-weight: 800;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .booking-summary-back,
     .booking-summary-send {
       min-height: 48px;
@@ -331,7 +338,15 @@
         width: 100%;
       }
 
+      .booking-summary-privacy-link {
+        order: 0;
+        width: 100%;
+        padding: 3px 0;
+        text-align: center;
+      }
+
       .booking-summary-back {
+        order: 1;
         width: 100%;
         min-height: 40px;
         padding: 7px 14px;
@@ -407,6 +422,7 @@
       </div>
       <footer class="booking-summary-footer">
         <button class="booking-summary-back" type="button">Back to booking</button>
+        <a class="booking-summary-privacy-link" href="privacy.html" target="_blank" rel="noopener noreferrer" aria-label="Privacy Notice, opens in a new tab">Privacy Notice</a>
         <button class="booking-summary-send" type="button">Send booking request</button>
       </footer>
     </section>
