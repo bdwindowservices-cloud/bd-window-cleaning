@@ -12,13 +12,15 @@
   const style = document.createElement("style");
   style.textContent = `
     #services,
-    #about {
+    #about,
+    #window-set-picture {
       scroll-margin-top: 96px;
     }
 
     @media (max-width: 900px) {
       #services,
-      #about {
+      #about,
+      #window-set-picture {
         scroll-margin-top: 132px;
       }
     }
@@ -442,10 +444,12 @@
 
   const updatePricingGuide = () => {
     const list = document.querySelector("#pricing-guide .faq-list");
+    const preview = document.querySelector(".window-set-preview");
+    if (preview) preview.id = "window-set-picture";
     if (!list) return;
 
     list.innerHTML = `
-      <article><h3>What counts as a window set?</h3><p>Look for the separate groups of windows on your home. Each group counts as one set, even when it contains several windows or panes.</p></article>
+      <article><h3>What counts as a window set? - <a href="#window-set-picture">See picture examples</a></h3><p>Look for the separate groups of windows on your home. Each group counts as one set, even when it contains several windows or panes.</p></article>
       <article><h3>Can you only clean my front windows?</h3><p>If you only want your front windows cleaned just let us know how many sets of windows you have at the front and ignore the back and side windows.</p></article>
       <article><h3>Is my conservatory small or large?</h3><p>Choose small for up to 6 large glass sections, or large for 7 or more. We clean the glass, frames and sills included in a conservatory clean. If you would like a roof plastic or glass cleaned please contact us for a separate quote.</p></article>
       <article><h3>How should I count my porch?</h3><p>Count a porch as one window set.</p></article>
