@@ -56,7 +56,10 @@
   const bookingDateStep = document.querySelector("#booking-date-step");
   const bookingNextHint = document.querySelector("#booking-next-hint");
   const bookingNextButton = document.querySelector("#booking-next-button");
+  const bookCleanButton = document.querySelector("#book-clean-button");
+  const desktopEstimateCta = document.querySelector("#desktop-estimate-cta");
   const appointmentPrompt = "Step 3: choose your appointment date and time";
+  const bookingSummaryLabel = "Booking Summary";
 
   const updateAppointmentStep = () => {
     if (!bookingDateStep) return;
@@ -73,6 +76,21 @@
     ) {
       bookingNextHint.textContent = appointmentPrompt;
     }
+
+    if (
+      bookCleanButton &&
+      !bookCleanButton.disabled &&
+      bookCleanButton.textContent.trim() !== bookingSummaryLabel
+    ) {
+      bookCleanButton.textContent = bookingSummaryLabel;
+    }
+
+    if (desktopEstimateCta) {
+      const targetLabel = bookingDateStep.hidden ? "Book clean" : bookingSummaryLabel;
+      if (desktopEstimateCta.textContent.trim() !== targetLabel) {
+        desktopEstimateCta.textContent = targetLabel;
+      }
+    }
   };
 
   if (bookingDateStep) {
@@ -87,6 +105,24 @@
   if (bookingNextHint) {
     const bookingHintObserver = new MutationObserver(updateAppointmentStep);
     bookingHintObserver.observe(bookingNextHint, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  }
+
+  if (bookCleanButton) {
+    const bookButtonObserver = new MutationObserver(updateAppointmentStep);
+    bookButtonObserver.observe(bookCleanButton, {
+      childList: true,
+      characterData: true,
+      subtree: true
+    });
+  }
+
+  if (desktopEstimateCta) {
+    const desktopCtaObserver = new MutationObserver(updateAppointmentStep);
+    desktopCtaObserver.observe(desktopEstimateCta, {
       childList: true,
       characterData: true,
       subtree: true
