@@ -272,24 +272,37 @@ function bookingReference_(date) {
 }
 
 function successPage_(reference) {
-  const destination = CONFIG.websiteUrl + "?quote=sent&reference=" + encodeURIComponent(reference) + "#quote-status";
-  return HtmlService.createHtmlOutput(
-    "<!doctype html><html lang=\"en-GB\"><head><meta charset=\"utf-8\">" +
-    "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
-    "<meta http-equiv=\"refresh\" content=\"0;url=" + html_(destination) + "\">" +
-    "<title>Returning to " + html_(CONFIG.businessName) + "</title>" +
-    "<script>window.location.replace(" + JSON.stringify(destination) + ");<\/script>" +
-    "</head><body></body></html>"
-  );
+  return messagePage_("success", reference);
 }
 
 function errorPage_() {
-  return HtmlService.createHtmlOutput(responsePage_(
+  const page = responsePage_(
     "We could not complete the booking",
     "Your information has not been confirmed. Please return to the website and contact Ben by phone, WhatsApp or email.",
     CONFIG.websiteUrl + "#contact",
     "Return to contact details"
-  ));
+  );
+  const message = bookingMessageScript_("error", "");
+  return HtmlService.createHtmlOutput(page.replace("</head>", message + "</head>"));
+}
+
+function messagePage_(status, reference) {
+  return HtmlService.createHtmlOutput(
+    "<!doctype html><html lang=\"en-GB\"><head><meta charset=\"utf-8\">" +
+    "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
+    "<title>Booking response</title>" +
+    bookingMessageScript_(status, reference) +
+    "</head><body></body></html>"
+  );
+}
+
+function bookingMessageScript_(status, reference) {
+  const message = JSON.stringify({
+    source: "bd-booking-service",
+    status: status,
+    reference: reference
+  }).replace(/</g, "\\u003c");
+  return "<script>window.top.postMessage(" + message + ", \"*\");<\/script>";
 }
 
 function responsePage_(title, message, destination, linkText) {
