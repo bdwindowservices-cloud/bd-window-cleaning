@@ -374,6 +374,67 @@
     previewHouse.classList.toggle("mobile-three-four-fit", useFullImage);
   };
 
+  const getSevenToEightPreviewSource = () => {
+    if (typeof frontSevenToEightPreviewImage !== "undefined") {
+      return frontSevenToEightPreviewImage;
+    }
+    if (typeof frontHousePreviewImages !== "undefined") {
+      return frontHousePreviewImages["7 to 8"] || "";
+    }
+    return "";
+  };
+
+  const showBespokeWithSevenToEightImage = () => {
+    const frontCount = document.querySelector("#front-window-count");
+    const house = document.querySelector(".preview-house");
+    const caption = document.querySelector("#window-preview-caption");
+    if (!frontCount || !house || frontCount.textContent.trim() !== "9+ bespoke") return;
+
+    const imageSource = getSevenToEightPreviewSource();
+    if (!imageSource) return;
+
+    let photo = house.querySelector("img.house-preview-photo");
+    if (!photo || photo.getAttribute("src") !== imageSource) {
+      house.innerHTML = `<img class="house-preview-photo" src="${imageSource}" alt="Brick house front shown for a bespoke quote">`;
+      photo = house.querySelector("img.house-preview-photo");
+    }
+
+    if (photo) {
+      photo.style.display = "block";
+      photo.style.width = "100%";
+      photo.style.height = "100%";
+      photo.style.minHeight = "0";
+      photo.style.aspectRatio = "auto";
+      photo.style.objectFit = "contain";
+      photo.style.objectPosition = "center";
+      photo.style.background = "#dcecf2";
+    }
+    if (caption) {
+      caption.textContent = "9+ front window sets selected. We will confirm a bespoke quote.";
+    }
+  };
+
+  const scheduleBespokePreview = () => {
+    window.setTimeout(showBespokeWithSevenToEightImage, 0);
+    window.requestAnimationFrame(showBespokeWithSevenToEightImage);
+  };
+
+  const initialiseBespokePreview = () => {
+    document
+      .querySelectorAll('[data-counter-action][data-counter-target="front"]')
+      .forEach((button) => {
+        button.addEventListener("click", scheduleBespokePreview);
+      });
+
+    const frontCount = document.querySelector("#front-window-count");
+    if (frontCount) {
+      const observer = new MutationObserver(scheduleBespokePreview);
+      observer.observe(frontCount, { childList: true, characterData: true, subtree: true });
+    }
+
+    scheduleBespokePreview();
+  };
+
   const updateFrontInstruction = () => {
     const instruction = document.querySelector('[data-counter-card="front"] span');
     if (instruction) instruction.textContent = "Choose the best match";
@@ -490,6 +551,7 @@
     updateCaption();
     updateFrontInstruction();
     updateMobileThreeFourImageFit();
+    initialiseBespokePreview();
     initialiseMobileBanner();
 
     document
