@@ -464,6 +464,21 @@ const updateExtraButtons = () => {
   });
 };
 
+const scrollToFormStep = (anchor) => {
+  if (!anchor) {
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    const header = document.querySelector(".site-header");
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    const anchorTop = window.scrollY + anchor.getBoundingClientRect().top;
+    const destination = Math.max(0, anchorTop - headerHeight - 18);
+
+    window.scrollTo({ top: destination, behavior: "smooth" });
+  });
+};
+
 const openBookingDateStep = () => {
   if (!validateQuoteDetails()) {
     return;
@@ -477,9 +492,7 @@ const openBookingDateStep = () => {
     bookingNextHint.textContent = "Step 3: choose a cleaning date before sending your request.";
   }
   setFloatingBookingDatePrompt();
-  if (bookingDateStep) {
-    bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+  scrollToFormStep(bookingNextHint || bookingDateStep);
 };
 
 const openQuoteDetails = () => {
@@ -499,17 +512,7 @@ const openQuoteDetails = () => {
     quoteNextHint.textContent = "Step 2: send your details to book a clean right now.";
   }
 
-  const stepTwoAnchor = quoteNextHint || quoteDetails;
-  if (stepTwoAnchor) {
-    requestAnimationFrame(() => {
-      const header = document.querySelector(".site-header");
-      const headerHeight = header ? header.getBoundingClientRect().height : 0;
-      const stepTop = window.scrollY + stepTwoAnchor.getBoundingClientRect().top;
-      const destination = Math.max(0, stepTop - headerHeight - 18);
-
-      window.scrollTo({ top: destination, behavior: "smooth" });
-    });
-  }
+  scrollToFormStep(quoteNextHint || quoteDetails);
 };
 
 const handleFloatingEstimateAction = (event) => {
@@ -610,9 +613,9 @@ if (quoteForm) {
       }
       if (bookingDateStep) {
         bookingDateStep.hidden = false;
-        bookingDateStep.scrollIntoView({ behavior: "smooth", block: "start" });
       }
       setFloatingBookingDatePrompt();
+      scrollToFormStep(bookingNextHint || bookingDateStep);
       return;
     }
 
