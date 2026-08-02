@@ -88,8 +88,11 @@ const positionBookingConfirmation = () => {
   });
 };
 
-if (quoteStatus && params.get("quote") === "sent") {
-  const reference = params.get("reference");
+const showBookingConfirmation = (reference) => {
+  if (!quoteStatus) {
+    return;
+  }
+
   if (quoteReference && reference) {
     quoteReference.textContent = `Booking reference: ${reference}. We have emailed your booking details and arrival window. If it is not in your inbox, please check your spam folder.`;
   }
@@ -101,6 +104,10 @@ if (quoteStatus && params.get("quote") === "sent") {
   } else {
     window.addEventListener("load", positionBookingConfirmation, { once: true });
   }
+};
+
+if (params.get("quote") === "sent") {
+  showBookingConfirmation(params.get("reference"));
 }
 
 const formatMoney = (value) => {
@@ -623,6 +630,45 @@ if (quoteNextButton && quoteDetails) {
 if (bookingNextButton && bookingDateStep) {
   bookingNextButton.addEventListener("click", openBookingDateStep);
 }
+
+const isTrustedBookingOrigin = (origin) => {
+  return origin === "null"
+    || origin === "https://script.google.com"
+    || /^https:\/\/([a-z0-9-]+\.)*googleusercontent\.com$/.test(origin);
+};
+
+window.addEventListener("message", (event) => {
+  const message = event.data;
+  if (!isTrustedBookingOrigin(event.origin) || !message || message.source !== "bd-booking-service") {
+    return;
+  }
+
+  if (message.status === "success") {
+    const reference = String(message.reference || "");
+    const confirmationUrl = new URL(window.location.href);
+    confirmationUrl.searchParams.set("quote", "sent");
+    confirmationUrl.searchParams.set("reference", reference);
+    confirmationUrl.hash = "quote-status";
+    window.history.replaceState(null, "", confirmationUrl);
+
+    showBookingConfirmation(reference);
+    if (bookCleanButton) {
+      bookCleanButton.textContent = "Booking confirmed";
+    }
+    if (formStatus) {
+      formStatus.textContent = "";
+    }
+    return;
+  }
+
+  if (bookCleanButton) {
+    bookCleanButton.disabled = false;
+    bookCleanButton.textContent = "Confirm booking";
+  }
+  if (formStatus) {
+    formStatus.textContent = "We could not complete your booking. Please try again or contact us directly.";
+  }
+});
 
 if (quoteForm) {
   quoteForm.addEventListener("submit", (event) => {
