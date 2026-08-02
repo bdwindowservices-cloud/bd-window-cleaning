@@ -62,14 +62,78 @@
   const bookCleanButton = document.querySelector("#book-clean-button");
   const desktopEstimateMain = document.querySelector("#desktop-estimate-main");
   const desktopEstimateCta = document.querySelector("#desktop-estimate-cta");
+  const mobileActionBar = document.querySelector(".mobile-action-bar");
   const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
   const appointmentPrompt = "Step 3: choose your appointment date and time";
   const chooseDateLabel = "Choose a date";
   const bookingSummaryLabel = "Booking Summary";
   const datePromptSuffix = " - Choose a cleaning date";
 
-  const hasSelectedBookingDate = () =>
-    Array.from(bookingDateOptions).some((option) => option.checked);
+  let mobileSummaryButton = document.querySelector("#mobile-summary-button");
+
+  if (mobileActionBar && !mobileSummaryButton) {
+    mobileSummaryButton = document.createElement("button");
+    mobileSummaryButton.id = "mobile-summary-button";
+    mobileSummaryButton.type = "button";
+    mobileSummaryButton.textContent = bookingSummaryLabel;
+    mobileSummaryButton.hidden = true;
+    mobileActionBar.append(mobileSummaryButton);
+  }
+
+  if (!document.querySelector("#mobile-summary-action-styles")) {
+    const mobileSummaryStyles = document.createElement("style");
+    mobileSummaryStyles.id = "mobile-summary-action-styles";
+    mobileSummaryStyles.textContent = `
+      @media (max-width: 640px) {
+        .mobile-action-bar.has-summary-action {
+          grid-template-columns: minmax(0, 1fr) minmax(124px, 0.72fr);
+        }
+
+        .mobile-action-bar.has-summary-action #mobile-quote-amount {
+          justify-items: start;
+          padding: 8px 10px;
+          text-align: left;
+          pointer-events: none;
+        }
+
+        #mobile-summary-button {
+          display: grid;
+          place-items: center;
+          min-height: 52px;
+          padding: 8px 10px;
+          border: 0;
+          border-radius: 8px;
+          color: #ffffff;
+          background: #07575b;
+          font: inherit;
+          font-weight: 850;
+          line-height: 1.15;
+          text-align: center;
+          cursor: pointer;
+        }
+
+        #mobile-summary-button:hover,
+        #mobile-summary-button:focus-visible {
+          background: #043f42;
+        }
+
+        #mobile-summary-button:focus-visible {
+          outline: 3px solid rgba(15, 139, 141, 0.24);
+          outline-offset: 2px;
+        }
+
+        #mobile-summary-button[hidden] {
+          display: none;
+        }
+      }
+    `;
+    document.head.append(mobileSummaryStyles);
+  }
+
+  const getSelectedBookingDate = () =>
+    Array.from(bookingDateOptions).find((option) => option.checked);
+
+  const hasSelectedBookingDate = () => Boolean(getSelectedBookingDate());
 
   const removeDatePromptFromMobileBanner = () => {
     const mobileMain = mobileQuoteAmount?.querySelector("span");
@@ -90,6 +154,20 @@
     }
   };
 
+  const scrollToBookingSummaryButton = () => {
+    if (!bookCleanButton) return;
+
+    const header = document.querySelector(".site-header");
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    const buttonTop = window.scrollY + bookCleanButton.getBoundingClientRect().top;
+    const destination = Math.max(0, buttonTop - headerHeight - 18);
+
+    window.scrollTo({ top: destination, behavior: "smooth" });
+    window.setTimeout(() => {
+      bookCleanButton.focus({ preventScroll: true });
+    }, 350);
+  };
+
   const updateAppointmentStep = () => {
     if (!bookingDateStep) return;
 
@@ -100,8 +178,10 @@
 
     const stepTwoIsOpen = Boolean(quoteDetails && !quoteDetails.hidden);
     const stepThreeIsOpen = !bookingDateStep.hidden;
-    const dateSelected = hasSelectedBookingDate();
+    const selectedBookingDate = getSelectedBookingDate();
+    const dateSelected = Boolean(selectedBookingDate);
     const targetButtonLabel = dateSelected ? bookingSummaryLabel : chooseDateLabel;
+    const showMobileSummaryAction = stepThreeIsOpen && dateSelected;
 
     if (quoteNextButton && quoteNextButton.hidden !== stepTwoIsOpen) {
       quoteNextButton.hidden = stepTwoIsOpen;
@@ -139,6 +219,31 @@
         (currentLabel === chooseDateLabel || currentLabel === bookingSummaryLabel)
       ) {
         desktopEstimateCta.textContent = "Book clean";
+      }
+    }
+
+    if (mobileSummaryButton) {
+      mobileSummaryButton.hidden = !showMobileSummaryAction;
+      mobileSummaryButton.setAttribute(
+        "aria-label",
+        selectedBookingDate
+          ? `View booking summary for ${selectedBookingDate.value}`
+          : bookingSummaryLabel
+      );
+    }
+
+    if (mobileActionBar) {
+      mobileActionBar.classList.toggle("has-summary-action", showMobileSummaryAction);
+      mobileActionBar.classList.toggle("is-single-action", !showMobileSummaryAction);
+    }
+
+    if (mobileQuoteAmount) {
+      if (showMobileSummaryAction) {
+        mobileQuoteAmount.setAttribute("aria-disabled", "true");
+        mobileQuoteAmount.setAttribute("tabindex", "-1");
+      } else {
+        mobileQuoteAmount.removeAttribute("aria-disabled");
+        mobileQuoteAmount.removeAttribute("tabindex");
       }
     }
 
@@ -221,6 +326,10 @@
     bookingNextButton.addEventListener("click", () => {
       window.setTimeout(updateAppointmentStep, 0);
     });
+  }
+
+  if (mobileSummaryButton) {
+    mobileSummaryButton.addEventListener("click", scrollToBookingSummaryButton);
   }
 
   updateAppointmentStep();
