@@ -86,9 +86,11 @@
     }
 
     if (desktopEstimateCta) {
-      const targetLabel = bookingDateStep.hidden ? "Book clean" : bookingSummaryLabel;
-      if (desktopEstimateCta.textContent.trim() !== targetLabel) {
-        desktopEstimateCta.textContent = targetLabel;
+      const currentLabel = desktopEstimateCta.textContent.trim();
+      if (!bookingDateStep.hidden && currentLabel !== bookingSummaryLabel) {
+        desktopEstimateCta.textContent = bookingSummaryLabel;
+      } else if (bookingDateStep.hidden && currentLabel === bookingSummaryLabel) {
+        desktopEstimateCta.textContent = "Book clean";
       }
     }
   };
