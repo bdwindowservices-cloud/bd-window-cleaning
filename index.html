@@ -317,15 +317,11 @@
       <section class="section quote-section" id="quote" aria-labelledby="quote-title">
         <div class="quote-intro">
           <div class="confirmation" id="quote-status" hidden tabindex="-1">
-            <strong>Thank you. Your quote request has been sent successfully.</strong>
-            <span>We will contact you using your preferred contact method. For anything urgent, email bdwindowservices@gmail.com.</span>
+            <strong>Thank you. Your booking is confirmed.</strong>
+            <span id="quote-reference">We have emailed your booking details and arrival window. If it is not in your inbox, please check your spam folder.</span>
           </div>
         </div>
-        <form class="quote-form" id="quote-form" action="https://formsubmit.co/bdwindowservices@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="New window cleaning quote request">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_next" value="https://bdwindowservices-cloud.github.io/bd-window-cleaning/?quote=sent#quote-status">
+        <form class="quote-form" id="quote-form" action="https://script.google.com/macros/s/AKfycbyXw47lc_3FHsoGixJseYbc-pdkT0RbvfromzySutFZxwVypH5dE7M7zWi1bR5ZWLI0Bg/exec" method="POST">
           <input type="hidden" name="Estimated quote" id="estimated-quote" value="">
           <input type="hidden" name="Front window sets" id="front-window-sets-input" value="">
           <input type="hidden" name="Back or side window sets" id="back-side-window-sets-input" value="">
@@ -409,7 +405,7 @@
             <label class="checkbox-option"><input type="radio" name="Cleaning date preference" data-booking-option data-booking-date-index="3" data-booking-slot="1 to 3 pm">Loading date, 1 to 3 pm</label>
             <label class="checkbox-option"><input type="radio" name="Cleaning date preference" data-booking-option data-booking-date-index="3" data-booking-slot="3 to 5 pm">Loading date, 3 to 5 pm</label>
             <label class="checkbox-option"><input type="radio" name="Cleaning date preference" value="Please contact me to arrange a different date" data-booking-option>Please contact me to arrange a different date.</label>
-            <div class="form-actions wide"><button class="button primary" id="book-clean-button" type="submit">Booking Summary</button><p id="form-status" role="status" aria-live="polite"></p></div>
+            <div class="form-actions wide"><button class="button primary" id="book-clean-button" type="submit">Confirm booking</button><p id="form-status" role="status" aria-live="polite"></p></div>
             <p class="privacy booking-reassurance wide">Your cleaner will check the estimate and confirm the price before beginning. There’s nothing to pay until your first clean has been completed.</p>
           </fieldset>
         </form>

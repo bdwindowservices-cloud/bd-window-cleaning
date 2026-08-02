@@ -1,6 +1,7 @@
 const year = document.querySelector("#year");
 const quoteForm = document.querySelector("#quote-form");
 const quoteStatus = document.querySelector("#quote-status");
+const quoteReference = document.querySelector("#quote-reference");
 const params = new URLSearchParams(window.location.search);
 const counterButtons = document.querySelectorAll("[data-counter-action]");
 const frontWindowCount = document.querySelector("#front-window-count");
@@ -73,6 +74,10 @@ if (year) {
 }
 
 if (quoteStatus && params.get("quote") === "sent") {
+  const reference = params.get("reference");
+  if (quoteReference && reference) {
+    quoteReference.textContent = `Booking reference: ${reference}. We have emailed your booking details and arrival window. If it is not in your inbox, please check your spam folder.`;
+  }
   quoteStatus.hidden = false;
   quoteStatus.focus({ preventScroll: true });
   quoteStatus.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -621,10 +626,10 @@ if (quoteForm) {
 
     if (bookCleanButton) {
       bookCleanButton.disabled = true;
-      bookCleanButton.textContent = "Sending clean request...";
+      bookCleanButton.textContent = "Confirming booking...";
     }
     if (formStatus) {
-      formStatus.textContent = "Sending your clean request. The next step will confirm it has gone through.";
+      formStatus.textContent = "Confirming your booking. The next page will show when it has gone through.";
     }
   });
 }
