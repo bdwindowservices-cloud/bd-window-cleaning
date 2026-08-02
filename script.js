@@ -73,6 +73,21 @@ if (year) {
   year.textContent = new Date().getFullYear();
 }
 
+const positionBookingConfirmation = () => {
+  if (!quoteStatus || quoteStatus.hidden) {
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    const header = document.querySelector(".site-header");
+    const headerHeight = header ? header.getBoundingClientRect().height : 0;
+    const confirmationTop = window.scrollY + quoteStatus.getBoundingClientRect().top;
+    const destination = Math.max(0, confirmationTop - headerHeight - 16);
+
+    window.scrollTo({ top: destination, behavior: "auto" });
+  });
+};
+
 if (quoteStatus && params.get("quote") === "sent") {
   const reference = params.get("reference");
   if (quoteReference && reference) {
@@ -80,7 +95,12 @@ if (quoteStatus && params.get("quote") === "sent") {
   }
   quoteStatus.hidden = false;
   quoteStatus.focus({ preventScroll: true });
-  quoteStatus.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  if (document.readyState === "complete") {
+    positionBookingConfirmation();
+  } else {
+    window.addEventListener("load", positionBookingConfirmation, { once: true });
+  }
 }
 
 const formatMoney = (value) => {
