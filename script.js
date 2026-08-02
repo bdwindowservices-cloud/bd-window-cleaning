@@ -351,7 +351,7 @@ const updateQuoteStep = (hasCompleteSelection) => {
   }
 
   quoteNextHint.textContent = hasCompleteSelection
-    ? "Your estimate is ready. Continue to send your details."
+    ? "Monthly payments spread the cost throughout the year."
     : "Add front window sets to continue.";
 };
 
