@@ -34,7 +34,6 @@ function setupBookingService() {
   PropertiesService.getScriptProperties().setProperty("BOOKINGS_SPREADSHEET_ID", spreadsheet.getId());
   const sheet = getOrCreateBookingSheet_(spreadsheet);
   console.log("Setup complete. Bookings will be stored in: " + spreadsheet.getName());
-  spreadsheet.toast("Booking email setup is complete.", CONFIG.businessName);
   return sheet.getName();
 }
 
