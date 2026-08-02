@@ -112,3 +112,5 @@ const openBookingDateStep = () => {
           git add script.js index.html
           git commit -m "Align Step 2 and Step 3 scroll positions"
           git push
+
+# Triggered after creation.
