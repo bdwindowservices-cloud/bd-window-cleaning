@@ -498,8 +498,17 @@ const openQuoteDetails = () => {
   if (quoteNextHint) {
     quoteNextHint.textContent = "Step 2: send your details to book a clean right now.";
   }
-  if (quoteDetails) {
-    quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const stepTwoAnchor = quoteNextHint || quoteDetails;
+  if (stepTwoAnchor) {
+    requestAnimationFrame(() => {
+      const header = document.querySelector(".site-header");
+      const headerHeight = header ? header.getBoundingClientRect().height : 0;
+      const stepTop = window.scrollY + stepTwoAnchor.getBoundingClientRect().top;
+      const destination = Math.max(0, stepTop - headerHeight - 18);
+
+      window.scrollTo({ top: destination, behavior: "smooth" });
+    });
   }
 };
 
