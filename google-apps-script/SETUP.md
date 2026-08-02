@@ -1,6 +1,6 @@
 # Booking confirmation setup
 
-The current live form continues to use FormSubmit until this setup is complete. Do not change the website form action yet.
+The live site on `main` continues to use FormSubmit until this pull request is tested and merged. The feature branch is connected to the deployed Google Apps Script web application.
 
 ## What this automation does
 
@@ -39,20 +39,20 @@ It does not check availability or limit the number of bookings in a time window.
 5. Who has access: **Anyone**.
 6. Select **Deploy**.
 7. Google will ask you to authorise access to the spreadsheet and Gmail. Review the permissions and approve them while signed in as `bdwindowservices@gmail.com`.
-8. Copy the web app URL ending in `/exec` and keep it private until it is added to the website form.
+8. Copy the web app URL ending in `/exec`. The feature branch now uses this deployment URL.
 
 If Google shows an unverified-app message for this personal script, choose **Advanced**, open the `B D Booking Confirmation` project, review the requested permissions, and continue only while signed in to the correct business account.
 
-## 4. Hand-off for website connection
+## 4. Website connection and testing
 
-Send the `/exec` web app URL to the website maintainer. The maintainer will then:
+The feature branch now:
 
-1. replace the FormSubmit form destination on the feature branch;
-2. remove FormSubmit-only hidden fields;
-3. update the on-page success wording to say the booking is confirmed;
-4. submit controlled test bookings;
-5. check the Sheet, business notification and customer confirmation;
-6. merge the pull request only after the complete journey passes.
+1. submits bookings to the deployed Google web application;
+2. no longer sends FormSubmit-only settings;
+3. displays the generated booking reference on the confirmation message;
+4. clearly labels the selected time as an arrival window.
+
+Submit a controlled test booking and complete the checklist below. Merge the pull request only after the complete journey passes.
 
 ## Testing checklist
 
