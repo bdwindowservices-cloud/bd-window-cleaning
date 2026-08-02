@@ -22,13 +22,16 @@ It does not check availability or limit the number of bookings in a time window.
 
 ## 2. Add the Apps Script files
 
-1. In the spreadsheet, select **Extensions > Apps Script**.
+1. In the spreadsheet, select **Extensions > Apps Script**. Google may call it **Untitled project**; this is normal and means the script is attached to that spreadsheet.
 2. Set the Apps Script project name to `B D Booking Confirmation`.
 3. Open the existing `Code.gs` file and replace its contents with the contents of this folder's `Code.gs`.
 4. Select the **+** beside Files, choose **HTML**, and name the new file `EmailTemplate`.
 5. Replace the new file's contents with the contents of `EmailTemplate.html`.
 6. Select **Project Settings** and set the time zone to **(GMT+00:00) London** or **Europe/London**.
 7. Save the project.
+8. At the top of the editor, select `setupBookingService` from the function list and click **Run**.
+9. Approve the requested spreadsheet permissions while signed in as `bdwindowservices@gmail.com`.
+10. Confirm the execution completes and a `Bookings` tab appears in the spreadsheet. This one-time step securely stores the spreadsheet connection for the deployed web app.
 
 ## 3. Deploy the web application
 

@@ -25,6 +25,19 @@ const BOOKING_HEADERS = [
   "Access notes"
 ];
 
+function setupBookingService() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  if (!spreadsheet) {
+    throw new Error("Open this project from the B D Website Bookings spreadsheet before running setup.");
+  }
+
+  PropertiesService.getScriptProperties().setProperty("BOOKINGS_SPREADSHEET_ID", spreadsheet.getId());
+  const sheet = getOrCreateBookingSheet_(spreadsheet);
+  console.log("Setup complete. Bookings will be stored in: " + spreadsheet.getName());
+  spreadsheet.toast("Booking email setup is complete.", CONFIG.businessName);
+  return sheet.getName();
+}
+
 function doGet() {
   return HtmlService.createHtmlOutput(
     "<h1>B D booking service</h1><p>The booking email service is running.</p>"
@@ -117,25 +130,13 @@ function validateBooking_(booking) {
 }
 
 function appendBooking_(booking) {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  if (!spreadsheet) {
-    throw new Error("This script must be attached to the B D Website Bookings spreadsheet.");
+  const spreadsheetId = PropertiesService.getScriptProperties().getProperty("BOOKINGS_SPREADSHEET_ID");
+  if (!spreadsheetId) {
+    throw new Error("Booking service setup is incomplete. Run setupBookingService from the spreadsheet's Apps Script project.");
   }
 
-  let sheet = spreadsheet.getSheetByName(CONFIG.sheetName);
-  if (!sheet) {
-    sheet = spreadsheet.insertSheet(CONFIG.sheetName);
-  }
-
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(BOOKING_HEADERS);
-    sheet.getRange(1, 1, 1, BOOKING_HEADERS.length)
-      .setFontWeight("bold")
-      .setBackground("#07575b")
-      .setFontColor("#ffffff");
-    sheet.setFrozenRows(1);
-  }
-
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  const sheet = getOrCreateBookingSheet_(spreadsheet);
   const row = sheet.getLastRow() + 1;
   const values = [
     booking.reference,
@@ -160,6 +161,25 @@ function appendBooking_(booking) {
   sheet.autoResizeColumns(1, BOOKING_HEADERS.length);
 
   return { sheet: sheet, row: row };
+}
+
+function getOrCreateBookingSheet_(spreadsheet) {
+  let sheet = spreadsheet.getSheetByName(CONFIG.sheetName);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(CONFIG.sheetName);
+  }
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(BOOKING_HEADERS);
+    sheet.getRange(1, 1, 1, BOOKING_HEADERS.length)
+      .setFontWeight("bold")
+      .setBackground("#07575b")
+      .setFontColor("#ffffff");
+    sheet.setFrozenRows(1);
+    sheet.autoResizeColumns(1, BOOKING_HEADERS.length);
+  }
+
+  return sheet;
 }
 
 function updateBookingStatus_(storedBooking, status) {
