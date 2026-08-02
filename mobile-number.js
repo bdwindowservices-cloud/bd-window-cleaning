@@ -1,4 +1,107 @@
 (() => {
+  const ensureTermsLinks = () => {
+    if (!document.querySelector("#terms-link-styles")) {
+      const termsStyles = document.createElement("style");
+      termsStyles.id = "terms-link-styles";
+      termsStyles.textContent = `
+        .footer-links {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 10px 16px;
+        }
+
+        .booking-summary-legal-links {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+          gap: 8px 14px;
+        }
+
+        .booking-summary-terms-link {
+          color: #07575b;
+          font-weight: 800;
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
+
+        @media (max-width: 700px) {
+          .booking-summary-footer .booking-summary-legal-links {
+            order: 0;
+            width: 100%;
+          }
+
+          .booking-summary-footer .booking-summary-legal-links .booking-summary-privacy-link,
+          .booking-summary-footer .booking-summary-legal-links .booking-summary-terms-link {
+            order: initial;
+            width: auto;
+            padding: 3px 0;
+            text-align: center;
+          }
+        }
+      `;
+      document.head.append(termsStyles);
+    }
+
+    const footerPrivacyLink = document.querySelector(
+      'footer .footer-links a[href="privacy.html"]'
+    );
+
+    if (
+      footerPrivacyLink &&
+      !document.querySelector('footer .footer-links a[href="terms.html"]')
+    ) {
+      const footerTermsLink = document.createElement("a");
+      footerTermsLink.href = "terms.html";
+      footerTermsLink.target = "_blank";
+      footerTermsLink.rel = "noopener noreferrer";
+      footerTermsLink.textContent = "Terms & Conditions";
+      footerPrivacyLink.insertAdjacentElement("afterend", footerTermsLink);
+    }
+
+    const addTermsToSummary = () => {
+      const overlay = document.querySelector("#booking-summary-overlay");
+      const privacyLink = overlay?.querySelector(".booking-summary-privacy-link");
+      if (!overlay || !privacyLink) return false;
+
+      let legalLinks = overlay.querySelector(".booking-summary-legal-links");
+      if (!legalLinks) {
+        legalLinks = document.createElement("span");
+        legalLinks.className = "booking-summary-legal-links";
+        privacyLink.replaceWith(legalLinks);
+        legalLinks.append(privacyLink);
+      }
+
+      if (!legalLinks.querySelector('a[href="terms.html"]')) {
+        const termsLink = document.createElement("a");
+        termsLink.className = "booking-summary-terms-link";
+        termsLink.href = "terms.html";
+        termsLink.target = "_blank";
+        termsLink.rel = "noopener noreferrer";
+        termsLink.setAttribute(
+          "aria-label",
+          "Terms and Conditions, opens in a new tab"
+        );
+        termsLink.textContent = "Terms & Conditions";
+        legalLinks.append(termsLink);
+      }
+
+      return true;
+    };
+
+    if (!addTermsToSummary()) {
+      const termsObserver = new MutationObserver(() => {
+        if (addTermsToSummary()) termsObserver.disconnect();
+      });
+
+      termsObserver.observe(document.body, { childList: true });
+    }
+  };
+
+  ensureTermsLinks();
+
   const params = new URLSearchParams(window.location.search);
   const bookingWasSent = params.get("quote") === "sent";
 
