@@ -332,5 +332,12 @@
     mobileSummaryButton.addEventListener("click", scrollToBookingSummaryButton);
   }
 
+  if (!document.querySelector('script[data-booking-summary-script]')) {
+    const bookingSummaryScript = document.createElement("script");
+    bookingSummaryScript.src = "booking-summary.js?v=20260802-1";
+    bookingSummaryScript.dataset.bookingSummaryScript = "true";
+    document.body.append(bookingSummaryScript);
+  }
+
   updateAppointmentStep();
 })();
