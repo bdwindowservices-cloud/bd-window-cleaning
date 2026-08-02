@@ -58,3 +58,5 @@ jobs:
           git add script.js index.html
           git commit -m "Keep step two heading visible after Book clean"
           git push
+
+# Triggered after creation.
