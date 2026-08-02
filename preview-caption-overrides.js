@@ -454,6 +454,7 @@
       <article><h3>Is my conservatory small or large?</h3><p>Choose small for up to 6 large glass sections, or large for 7 or more. We clean the glass, frames and sills included in a conservatory clean. If you would like a roof plastic or glass cleaned please contact us for a separate quote <a href="#contact">here</a>.</p></article>
       <article><h3>How should I count my porch?</h3><p>Count a porch as one window set.</p></article>
       <article><h3>What about doors with glass?</h3><p>We will clean any regular front and back doors as included in the price and these do not need to be counted. Just count any French doors, patio doors as one window set.</p></article>
+      <article><h3>With a regular clean how long do I have to commit to?</h3><p>Regular cleaning require a minimum of three monthly payments, covering two cleans. We will confirm the price at your first appointment before you decide. After 3 months you may cancel our services at any time. If you just require a one off clean please select it on our price list when booking.</p></article>
     `;
   };
 
