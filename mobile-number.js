@@ -10,6 +10,23 @@
         <strong>Thank you, your appointment request has been sent successfully.</strong>
         <span>We will email you confirmation of your booked appointment. For any changes to your appointment or anything urgent please email us on <a href="mailto:bdwindowservices@gmail.com">bdwindowservices@gmail.com</a>.</span>
       `;
+
+      const positionMobileConfirmation = () => {
+        if (window.innerWidth > 640) return;
+
+        const header = document.querySelector(".site-header");
+        const headerHeight = header ? header.getBoundingClientRect().height : 0;
+        const confirmationTop =
+          window.scrollY + confirmation.getBoundingClientRect().top;
+        const destination = Math.max(0, confirmationTop - headerHeight - 18);
+
+        window.scrollTo({ top: destination, behavior: "auto" });
+      };
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(positionMobileConfirmation);
+      });
+      window.setTimeout(positionMobileConfirmation, 450);
     }
 
     document
