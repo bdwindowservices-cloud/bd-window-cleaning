@@ -1,0 +1,60 @@
+name: Fix step two scroll position
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-step-two-scroll.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-scroll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Keep the top of step two visible
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          script_path = Path('script.js')
+          script = script_path.read_text()
+          old = '''  if (quoteDetails) {
+    quoteDetails.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
+'''
+          new = '''  const stepTwoAnchor = quoteNextHint || quoteDetails;
+  if (stepTwoAnchor) {
+    requestAnimationFrame(() => {
+      const header = document.querySelector(".site-header");
+      const headerHeight = header ? header.getBoundingClientRect().height : 0;
+      const stepTop = window.scrollY + stepTwoAnchor.getBoundingClientRect().top;
+      const destination = Math.max(0, stepTop - headerHeight - 18);
+
+      window.scrollTo({ top: destination, behavior: "smooth" });
+    });
+  }
+};
+'''
+          if old not in script:
+              raise SystemExit('Expected step two scroll block was not found')
+          script_path.write_text(script.replace(old, new, 1))
+
+          index_path = Path('index.html')
+          index = index_path.read_text()
+          old_version = 'script.js?v=20260801-5'
+          new_version = 'script.js?v=20260802-1'
+          if old_version not in index:
+              raise SystemExit('Expected script cache version was not found')
+          index_path.write_text(index.replace(old_version, new_version, 1))
+          PY
+      - name: Commit scroll correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add script.js index.html
+          git commit -m "Keep step two heading visible after Book clean"
+          git push
