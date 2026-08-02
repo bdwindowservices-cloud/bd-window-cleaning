@@ -386,7 +386,7 @@
     list.innerHTML = `
       <article><h3>What counts as a window set?</h3><p>A window set is a group of panes contained within one window frame. Count the whole frame as one set, not every individual pane of glass.</p></article>
       <article><h3>Can you only clean my front windows?</h3><p>Yes. Set the back or side window count to 0 and choose the closest range for your front windows.</p></article>
-      <article><h3>Is my conservatory small or large?</h3><p>A small conservatory is usually a compact lean-to or single-room conservatory with fewer glass panels. Choose large for a wider, wraparound or heavily glazed conservatory. Pick the closest match if you are unsure.</p></article>
+      <article><h3>Is my conservatory small or large?</h3><p>Choose small for up to 6 large glass sections, or large for 7 or more. We clean the glass, frames and sills included in a conservatory clean. If you would like a roof plastic or glass cleaned please contact us for a separate quote.</p></article>
       <article><h3>How should I count my porch?</h3><p>Count each separate group of porch windows as one window set. Do not count each individual pane separately.</p></article>
       <article><h3>What about doors with glass?</h3><p>A standard front or back door with a small glass panel does not need to be counted. Count French doors, patio doors or large fully glazed doors as one window set.</p></article>
     `;
