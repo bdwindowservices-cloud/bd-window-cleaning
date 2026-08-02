@@ -60,7 +60,6 @@
   const bookingNextHint = document.querySelector("#booking-next-hint");
   const bookingNextButton = document.querySelector("#booking-next-button");
   const bookCleanButton = document.querySelector("#book-clean-button");
-  const desktopEstimateMain = document.querySelector("#desktop-estimate-main");
   const desktopEstimateCta = document.querySelector("#desktop-estimate-cta");
   const mobileQuoteAmount = document.querySelector("#mobile-quote-amount");
   const appointmentPrompt = "Step 3: choose your appointment date and time";
@@ -71,14 +70,7 @@
   const hasSelectedBookingDate = () =>
     Array.from(bookingDateOptions).some((option) => option.checked);
 
-  const removeDatePromptFromBanners = () => {
-    if (desktopEstimateMain) {
-      const currentText = desktopEstimateMain.textContent;
-      if (currentText.includes(datePromptSuffix)) {
-        desktopEstimateMain.textContent = currentText.replace(datePromptSuffix, "");
-      }
-    }
-
+  const removeDatePromptFromMobileBanner = () => {
     const mobileMain = mobileQuoteAmount?.querySelector("span");
     if (mobileMain && mobileMain.textContent.includes(datePromptSuffix)) {
       mobileMain.textContent = mobileMain.textContent.replace(datePromptSuffix, "");
@@ -137,8 +129,8 @@
       }
     }
 
-    if (stepThreeIsOpen && dateSelected) {
-      removeDatePromptFromBanners();
+    if (stepThreeIsOpen) {
+      removeDatePromptFromMobileBanner();
     }
   };
 
@@ -171,15 +163,6 @@
   if (bookCleanButton) {
     const bookButtonObserver = new MutationObserver(updateAppointmentStep);
     bookButtonObserver.observe(bookCleanButton, {
-      childList: true,
-      characterData: true,
-      subtree: true
-    });
-  }
-
-  if (desktopEstimateMain) {
-    const desktopMainObserver = new MutationObserver(updateAppointmentStep);
-    desktopMainObserver.observe(desktopEstimateMain, {
       childList: true,
       characterData: true,
       subtree: true
