@@ -26,6 +26,36 @@
       #pricing-guide {
         scroll-margin-top: 96px;
       }
+      .testimonials h2 {
+        margin-bottom: 24px;
+      }
+      .testimonial-list {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .testimonial-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 220px;
+        padding: 24px;
+        border: 1px solid #dbe6e2;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 12px 28px rgba(21, 42, 36, 0.08);
+      }
+      .testimonial-card blockquote {
+        margin: 0 0 22px;
+        color: #33423e;
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+      .testimonial-card cite {
+        color: #07575b;
+        font-style: normal;
+        font-weight: 850;
+      }
       .front-only-option {
         display: flex;
         align-items: center;
@@ -142,6 +172,12 @@
         #pricing-guide {
           scroll-margin-top: 132px;
         }
+        .testimonial-list {
+          grid-template-columns: 1fr;
+        }
+        .testimonial-card {
+          min-height: 0;
+        }
       }
       @media (min-width: 641px) {
         body { padding-bottom: 96px; }
@@ -245,6 +281,24 @@
           <figure class="clean-window-placeholder">
             <img class="clean-window-visual" src="assets/clean-window-example.webp" alt="Clean white-framed window on a red brick home" width="380" height="285" loading="lazy" style="display: block; width: 100%; height: auto; min-height: 0; border: 0; object-fit: cover;">
           </figure>
+        </div>
+      </section>
+
+      <section class="section testimonials" id="testimonials" aria-labelledby="testimonials-title">
+        <h2 id="testimonials-title">Recommended by our customers</h2>
+        <div class="testimonial-list">
+          <article class="testimonial-card">
+            <blockquote>“Ben has always done a great job, let's me know ahead of time when he's coming and is super reliable, would highly recommend.”</blockquote>
+            <cite>Becky</cite>
+          </article>
+          <article class="testimonial-card">
+            <blockquote>“I can highly recommend Ben Drummond window cleaning, my windows and fascia have always been sparking after he's cleaned them, he's very professional.”</blockquote>
+            <cite>Karen</cite>
+          </article>
+          <article class="testimonial-card">
+            <blockquote>“Andras’s customer review will go here. Keep the wording natural and use the customer’s own words.”</blockquote>
+            <cite>Andras</cite>
+          </article>
         </div>
       </section>
 
