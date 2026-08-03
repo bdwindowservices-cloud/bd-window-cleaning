@@ -35,6 +35,7 @@ const bookingDateStep = document.querySelector("#booking-date-step");
 const bookingDateOptions = document.querySelectorAll("[data-booking-option]");
 const bookCleanButton = document.querySelector("#book-clean-button");
 const formStatus = document.querySelector("#form-status");
+const bookingResponse = document.querySelector("#booking-response");
 const mobileQuoteDefaultHref = mobileQuoteAmount ? mobileQuoteAmount.getAttribute("href") : "";
 const mobileQuoteDefaultText = mobileQuoteAmount ? mobileQuoteAmount.textContent : "";
 const desktopEstimateDefaultMain = desktopEstimateMain ? desktopEstimateMain.textContent : "";
@@ -68,6 +69,8 @@ const formatCleaningDate = new Intl.DateTimeFormat("en-GB", {
   day: "numeric",
   month: "long"
 });
+let bookingSubmissionPending = false;
+let bookingConfirmationShown = false;
 
 if (year) {
   year.textContent = new Date().getFullYear();
@@ -89,14 +92,52 @@ const positionBookingConfirmation = () => {
 };
 
 const showBookingConfirmation = (reference) => {
-  if (!quoteStatus) {
+  if (!quoteStatus || bookingConfirmationShown) {
     return;
   }
 
-  if (quoteReference && reference) {
-    quoteReference.textContent = `Booking reference: ${reference}. We have emailed your booking details and arrival window. If it is not in your inbox, please check your spam folder.`;
+  bookingConfirmationShown = true;
+  bookingSubmissionPending = false;
+
+  const confirmationTitle = quoteStatus.querySelector("strong");
+  if (confirmationTitle) {
+    confirmationTitle.textContent = "Thank you, your booking request has been sent.";
   }
+  if (quoteReference) {
+    quoteReference.textContent = reference
+      ? `Booking reference: ${reference}. A confirmation email is on its way. If it is not in your inbox, please check your spam folder.`
+      : "A confirmation email is on its way. If it is not in your inbox, please check your spam folder.";
+  }
+
+  const confirmationUrl = new URL(window.location.href);
+  confirmationUrl.searchParams.set("quote", "sent");
+  if (reference) {
+    confirmationUrl.searchParams.set("reference", reference);
+  } else {
+    confirmationUrl.searchParams.delete("reference");
+  }
+  confirmationUrl.hash = "quote-status";
+  window.history.replaceState(null, "", confirmationUrl);
+
+  document.body.classList.add("booking-complete");
+  quoteStatus.classList.add("is-complete");
   quoteStatus.hidden = false;
+
+  if (quoteForm) {
+    quoteForm.reset();
+    quoteForm.hidden = true;
+    quoteForm.setAttribute("aria-hidden", "true");
+  }
+  if (bookingResponse) {
+    bookingResponse.hidden = true;
+  }
+  if (mobileActionBar) {
+    mobileActionBar.hidden = true;
+  }
+  if (desktopActionBar) {
+    desktopActionBar.hidden = true;
+  }
+
   quoteStatus.focus({ preventScroll: true });
 
   if (document.readyState === "complete") {
@@ -644,23 +685,11 @@ window.addEventListener("message", (event) => {
   }
 
   if (message.status === "success") {
-    const reference = String(message.reference || "");
-    const confirmationUrl = new URL(window.location.href);
-    confirmationUrl.searchParams.set("quote", "sent");
-    confirmationUrl.searchParams.set("reference", reference);
-    confirmationUrl.hash = "quote-status";
-    window.history.replaceState(null, "", confirmationUrl);
-
-    showBookingConfirmation(reference);
-    if (bookCleanButton) {
-      bookCleanButton.textContent = "Booking confirmed";
-    }
-    if (formStatus) {
-      formStatus.textContent = "";
-    }
+    showBookingConfirmation(String(message.reference || ""));
     return;
   }
 
+  bookingSubmissionPending = false;
   if (bookCleanButton) {
     bookCleanButton.disabled = false;
     bookCleanButton.textContent = "Confirm booking";
@@ -669,6 +698,20 @@ window.addEventListener("message", (event) => {
     formStatus.textContent = "We could not complete your booking. Please try again or contact us directly.";
   }
 });
+
+if (bookingResponse) {
+  bookingResponse.addEventListener("load", () => {
+    if (!bookingSubmissionPending || bookingConfirmationShown) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      if (bookingSubmissionPending && !bookingConfirmationShown) {
+        showBookingConfirmation("");
+      }
+    }, 500);
+  });
+}
 
 if (quoteForm) {
   quoteForm.addEventListener("submit", (event) => {
@@ -689,6 +732,8 @@ if (quoteForm) {
       scrollToFormStep(bookingNextHint || bookingDateStep);
       return;
     }
+
+    bookingSubmissionPending = true;
 
     if (bookCleanButton) {
       bookCleanButton.disabled = true;
