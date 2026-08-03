@@ -369,6 +369,51 @@ h3 { margin-bottom: 8px; font-size: 1.2rem; line-height: 1.2; }
   background: var(--success);
 }
 .confirmation[hidden] { display: none; }
+.confirmation.is-complete {
+  width: min(760px, 100%);
+  min-height: 210px;
+  align-content: center;
+  gap: 12px;
+  margin: 0;
+  padding: clamp(28px, 7vw, 52px);
+  border: 2px solid var(--success-ink);
+  box-shadow: 0 18px 44px rgba(21, 42, 36, 0.12);
+}
+.confirmation.is-complete strong {
+  font-size: clamp(1.5rem, 5vw, 2.35rem);
+  line-height: 1.15;
+}
+.confirmation.is-complete span {
+  max-width: 62ch;
+  font-size: clamp(1rem, 2.5vw, 1.12rem);
+  line-height: 1.6;
+}
+.booking-complete .quote-section {
+  min-height: 58svh;
+}
+.booking-complete .quote-intro {
+  position: static;
+  width: min(1120px, calc(100% - clamp(24px, 4vw, 72px)));
+  margin-left: clamp(24px, 4vw, 72px);
+}
+.booking-complete .quote-form,
+.booking-complete .desktop-action-bar,
+.booking-complete .mobile-action-bar {
+  display: none !important;
+}
+@media (max-width: 640px) {
+  .booking-complete .quote-section {
+    min-height: calc(100svh - 120px);
+    padding-top: 28px;
+  }
+  .booking-complete .quote-intro {
+    width: 100%;
+    margin-left: 0;
+  }
+  .confirmation.is-complete {
+    min-height: 280px;
+  }
+}
 .quote-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
